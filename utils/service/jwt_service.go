@@ -17,6 +17,7 @@ type JWTService interface {
 	GenerateRefreshToken(ctx context.Context, userID uuid.UUID) (*model.RefreshToken, error)
 	ValidateAccessToken(tokenStr string) (*model.JWTPayloadClaim, error)
 	RevokeRefreshToken(ctx context.Context, tokenID uuid.UUID) error
+	RevokeRefreshTokenByToken(ctx context.Context, token string) error
 	DeleteExpiredToken(ctx context.Context) error
 }
 
@@ -91,6 +92,11 @@ func (s *jwtService) ValidateAccessToken(tokenStr string) (*model.JWTPayloadClai
 func (s *jwtService) RevokeRefreshToken(ctx context.Context, tokenID uuid.UUID) error {
 	return s.refreshToken.RevokeById(ctx, tokenID, time.Now())
 }
+
+func (s *jwtService) RevokeRefreshTokenByToken(ctx context.Context, token string) error {
+	return s.refreshToken.RevokeByToken(ctx, token, time.Now())
+}
+
 
 func (s *jwtService) DeleteExpiredToken(ctx context.Context) error {
 	return  s.refreshToken.DeleteExpired(ctx)

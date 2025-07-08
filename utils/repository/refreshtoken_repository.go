@@ -29,7 +29,7 @@ func NewRefreshTokenRepository(db *sql.DB) RefreshTokenRepository {
 }
 
 func (r *refreshTokenRepository) Save(ctx context.Context, token *model.RefreshToken) error {
-	_, err := r.db.ExecContext(ctx, `INSERT INTO refresh_tokens (id, user_id, token, created_at, expires_at, revoked, revoked_at, replaced_by_token, updated_at) VALUES ($1, $2, $3, $4, $5, 6, $7, $8, $9)`, token.ID, token.UserID, token.Token, token.Created_At, token.Expires_At, token.Revoked, token.Revoked_At, token.ReplaceByToken, token.Updated_At)
+	_, err := r.db.ExecContext(ctx, `INSERT INTO refresh_tokens (id, user_id, token, created_at, expires_at, revoked, revoked_at, replaced_by_token, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, token.ID, token.UserID, token.Token, token.Created_At, token.Expires_At, token.Revoked, token.Revoked_At, token.ReplaceByToken, token.Updated_At)
 
 	return err
 }
@@ -55,12 +55,12 @@ func (r *refreshTokenRepository) FindByToken(ctx context.Context, token string) 
 }
 
 func (r *refreshTokenRepository) RevokeById(ctx context.Context, id uuid.UUID, revokedAt time.Time) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE refresh_tokens SET revoked = TRUE, revoked_at = $2, updated_at = $3, WHERE id = $1`, id, revokedAt)
+	_, err := r.db.ExecContext(ctx, `UPDATE refresh_tokens SET revoked = TRUE, revoked_at = $2, updated_at = $3 WHERE id = $1`, id, revokedAt, revokedAt)
 	return err
 }
 
 func (r *refreshTokenRepository) RevokeByToken(ctx context.Context, token string, revokedAt time.Time) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE refresh_tokens SET revoked = TRUE, revoked_at = $2, updated_at = $3, WHERE token = $1`, token, revokedAt)
+	_, err := r.db.ExecContext(ctx, `UPDATE refresh_tokens SET revoked = TRUE, revoked_at = $2, updated_at = $3 WHERE token = $1`, token, revokedAt, revokedAt)
 	return err
 }
 

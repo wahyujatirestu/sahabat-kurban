@@ -3,7 +3,7 @@ POST http://localhost:8080/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "username": "wahyu",
+    "username": "johndoe",
     "name": "Wahyu Jati Restu",
     "email": "wahyu@example.com",
     "password": "wahyusuperkuat",
@@ -40,3 +40,4 @@ Content-Type: application/json
 {
     "refreshToken": "5b663d6e-36c5-4300-86da-9f4756437c42"
 }
+

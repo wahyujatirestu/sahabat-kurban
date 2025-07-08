@@ -47,6 +47,8 @@ func NewServer() *Server {
 	engine := gin.Default()
 	host := fmt.Sprintf(":%s", cfg.ApiPort)
 
+	seedInitialAdmin(userRepo)
+
 	return &Server{
 		userRepo: userRepo,
 		rtRepo: rtRepo,

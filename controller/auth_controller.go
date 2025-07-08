@@ -15,7 +15,7 @@ func NewAuthController(authService service.AuthService) *AuthController {
 }
 
 func (c *AuthController) Register(ctx *gin.Context) {
-	var req dto.RegisterRequest
+	var req dto.RegisterUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(400, gin.H{"error": err.Error()})
 		return

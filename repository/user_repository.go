@@ -17,6 +17,7 @@ type UserRepository interface {
 	FindByEmailOrUsername(ctx context.Context, identifier string) (*model.User, error)
 	FindById(ctx context.Context, id uuid.UUID) (*model.User, error)
 	Update(ctx context.Context, user *model.User) error
+	UpdatePassword(ctx context.Context, userID uuid.UUID, newHashed string) error
 	Delete(ctx context.Context, id uuid.UUID) error
 }
 
@@ -91,6 +92,11 @@ func (r *userRepository) FindById(ctx context.Context, id uuid.UUID) (*model.Use
 
 func (r *userRepository) Update(ctx context.Context, user *model.User) error {
 	_, err := r.db.ExecContext(ctx, `UPDATE users SET username=$1, name=$2, email=$3, role=$4, updated_at=now() WHERE id=$5`, user.Username, user.Name, user.Email, user.Role, user.ID)
+	return err
+}
+
+func (r *userRepository) UpdatePassword(ctx context.Context, userID uuid.UUID, newHashed string) error {
+	_, err := r.db.ExecContext(ctx, `UPDATE users SET password=$1, updated_at=now() WHERE id=$2`, newHashed, userID)
 	return err
 }
 

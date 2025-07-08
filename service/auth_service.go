@@ -16,7 +16,7 @@ import (
 )
 
 type AuthService interface {
-	Register(ctx context.Context, req dto.RegisterRequest) (*dto.AuthResponse, error)
+	Register(ctx context.Context, req dto.RegisterUserRequest) (*dto.AuthResponse, error)
 	Login(ctx context.Context, req dto.LoginRequest) (*dto.AuthResponse, error)
 	RefreshToken(ctx context.Context, refreshToken string) (*dto.AuthResponse, error)
 	Logout(ctx context.Context, refreshToken string) error
@@ -38,7 +38,7 @@ func NewAuthService(cfg *config.Config, userRepo repository.UserRepository, rtRe
 	}
 }
 
-func (s *authService) Register(ctx context.Context, req dto.RegisterRequest) (*dto.AuthResponse, error) {
+func (s *authService) Register(ctx context.Context, req dto.RegisterUserRequest) (*dto.AuthResponse, error) {
 	existing, _ := s.userRepo.FindByEmailOrUsername(ctx, req.Email)
 	if existing != nil {
 		return nil, errors.New("Email already used")
@@ -60,7 +60,7 @@ func (s *authService) Register(ctx context.Context, req dto.RegisterRequest) (*d
 		Name: req.Name,
 		Email: req.Email,
 		Password: hashed,
-		Role: req.Role,
+		Role: "user",
 		Created_At: time.Now(),
 		Updated_At: time.Now(),
 	}

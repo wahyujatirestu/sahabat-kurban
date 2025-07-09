@@ -3,21 +3,21 @@ POST http://localhost:8080/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "username": "wahyu",
-    "name": "Wahyu Jati",
-    "email": "wahyu@mail.com",
-    "password": "wahyusuperkuat"
+    "username": "johndoel",
+    "name": "John Doe",
+    "email": "johndoe@gmail.com",
+    "password": "admin123"
 }
 
 ###
 
-### LOGIN
+### LOGIN (email or username)
 POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
-    "identifier": "superadmin",
-    "password": "admin123"
+    "identifier": "<your email or username>",
+    "password": ""
 }
 
 ###
@@ -71,7 +71,6 @@ Content-Type: application/json
 ### GET SEMUA USER (admin only)
 GET http://localhost:8080/api/v1/users
 Authorization: Bearer <your access token>
-
 ###
 
 ### GET USER BY ID (admin only)
@@ -86,7 +85,7 @@ Authorization: Bearer <your access token>
 
 ###
 
-### UPDATE PROFIL SENDIRI / ADMIN UPDATE SIAPA SAJA
+### UPDATE PROFIL 
 PUT http://localhost:8080/api/v1/users/{{ user_id }}
 Authorization: Bearer <your access token>
 Content-Type: application/json
@@ -105,12 +104,60 @@ Authorization: Bearer <your access token>
 Content-Type: application/json
 
 {
-    "old_password": "wahyusuperkuat",
-    "new_password": "admin123"
+    "old_password": "",
+    "new_password": ""
 }
 
 ###
 
 ### DELETE USER (admin only)
 DELETE http://localhost:8080/api/v1/users/{{ user_id }}
+Authorization: Bearer <your access token>
+
+###
+
+### Create Pekurban (admin)
+POST http://localhost:8080/api/v1/pekurban
+Authorization: Bearer <your access token>
+Content-Type: application/json
+
+{
+    "user_id": "",
+    "name": "",
+    "phone": "081234567856",
+    "email": "",
+    "alamat": "Jalan Raya Umum"
+}
+
+
+###
+
+### Get All Pekurban (admin/panitia only)
+GET http://localhost:8080/api/v1/pekurban
+Authorization: Bearer <your access token>
+
+###
+
+### Get Pekurban by ID (admin/panitia only)
+GET http://localhost:8080/api/v1/pekurban/{{ user_id }}
+Authorization: Bearer <your access token>
+
+###
+
+### Update Pekurban 
+PUT http://localhost:8080/api/v1/pekurban/{{ user_id }}
+Authorization: Bearer <your access token>
+Content-Type: application/json
+
+{
+    "name": "Ahmad Johndoe",
+    "phone": "082222222233",
+    "email": "johndoe@example.com",
+    "alamat": "Dimana aja"
+}
+
+###
+
+### Delete Pekurban (admin only)
+DELETE http://localhost:8080/api/v1/pekurban/{{ user_id }}
 Authorization: Bearer <your access token>

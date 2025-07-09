@@ -33,6 +33,11 @@ type RefreshTokenRequest struct {
 	RefreshToken string `json:"refreshToken" binding:"required"`
 }
 
+type TokenOnlyResponse struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token,omitempty"`
+}
+
 type UpdateRoleRequest struct {
 	Role string `json:"role" binding:"required,oneof=admin panitia user"`
 }

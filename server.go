@@ -9,6 +9,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/wahyujatirestu/sahabat-kurban/config"
 	"github.com/wahyujatirestu/sahabat-kurban/controller"
+	"github.com/wahyujatirestu/sahabat-kurban/middleware"
 	"github.com/wahyujatirestu/sahabat-kurban/repository"
 	"github.com/wahyujatirestu/sahabat-kurban/routes"
 	"github.com/wahyujatirestu/sahabat-kurban/service"
@@ -18,6 +19,7 @@ import (
 
 type Server struct {
 	userRepo 	repository.UserRepository
+	userService service.UserService
 	authService service.AuthService
 	jwtService	utilsservice.JWTService
 	rtRepo 		utilsrepo.RefreshTokenRepository
@@ -43,6 +45,7 @@ func NewServer() *Server {
 	rtRepo := utilsrepo.NewRefreshTokenRepository(db)
 	jwtService := utilsservice.NewJWTServie(cfg, rtRepo)
 	authService := service.NewAuthService(cfg, userRepo, rtRepo, jwtService)
+	userService := service.NewUserService(userRepo)
 
 	engine := gin.Default()
 	host := fmt.Sprintf(":%s", cfg.ApiPort)
@@ -54,6 +57,7 @@ func NewServer() *Server {
 		rtRepo: rtRepo,
 		db: db,
 		authService: authService,
+		userService: userService,
 		jwtService: jwtService,
 		engine: engine,
 		host: host,
@@ -62,10 +66,13 @@ func NewServer() *Server {
 
 func (s *Server) SetupRoutes() {
 	apiV1 := s.engine.Group("/api/v1")
+	authMw := middleware.NewAuthMiddleware(s.jwtService)
 
 	authController := controller.NewAuthController(s.authService)
+	userController := controller.NewUserController(s.userService)
 
 	routes.AuthRoute(apiV1, authController)
+	routes.UserRoute(apiV1, userController, authMw)
 }
 
 func (s *Server) Run() {

@@ -56,6 +56,7 @@ func (s *userService) Update(ctx context.Context, id uuid.UUID, req dto.UpdateUs
 		Username: req.Username,
 		Name: req.Name,
 		Email: req.Email,
+		Role: "user",
 	}
 
 	return s.userRepo.Update(ctx, user)

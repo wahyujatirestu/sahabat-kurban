@@ -1,43 +1,116 @@
-### Register User
+### REGISTER USER (umum)
 POST http://localhost:8080/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "username": "johndoe",
-    "name": "Wahyu Jati Restu",
-    "email": "wahyu@example.com",
-    "password": "wahyusuperkuat",
-    "role": "user"
-}
-
-###
-
-### Login User
-POST http://localhost:8080/api/v1/auth/login
-Content-Type: application/json
-
-{
-    "identifier": "wahyu", 
+    "username": "wahyu",
+    "name": "Wahyu Jati",
+    "email": "wahyu@mail.com",
     "password": "wahyusuperkuat"
 }
 
 ###
 
-### Refresh Token
-POST http://localhost:8080/api/v1/auth/refresh
+### LOGIN
+POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
-    "refreshToken": "5b663d6e-36c5-4300-86da-9f4756437c42"
+    "identifier": "superadmin",
+    "password": "admin123"
 }
 
 ###
 
-### Logout
+### REFRESH TOKEN
+POST http://localhost:8080/api/v1/auth/refresh
+Content-Type: application/json
+
+{
+    "refreshToken": "<your refresh token>"
+}
+
+###
+
+### LOGOUT
 POST http://localhost:8080/api/v1/auth/logout
 Content-Type: application/json
 
 {
-    "refreshToken": "5b663d6e-36c5-4300-86da-9f4756437c42"
+    "refreshToken": "<your refresh token>"
 }
 
+###
+
+### BUAT ADMIN BARU (admin only)
+POST http://localhost:8080/api/v1/users/register
+Authorization: Bearer <your access token>
+Content-Type: application/json
+
+{
+    "username": "superadmin2",
+    "name": "Admin Kedua",
+    "email": "admin2@mail.com",
+    "password": "admin123",
+    "role": "admin"
+}
+
+###
+
+### PROMOSI USER JADI PANITIA (admin only)
+PATCH http://localhost:8080/api/v1/users/{{ user_id }}/role
+Authorization: Bearer <your access token>
+Content-Type: application/json
+
+{
+    "role": "panitia"
+}
+
+###
+
+### GET SEMUA USER (admin only)
+GET http://localhost:8080/api/v1/users
+Authorization: Bearer <your access token>
+
+###
+
+### GET USER BY ID (admin only)
+GET http://localhost:8080/api/v1/users/{{ user_id }}
+Authorization: Bearer <your access token>
+
+###
+
+### GET PROFILE SENDIRI
+GET http://localhost:8080/api/v1/users/me
+Authorization: Bearer <your access token>
+
+###
+
+### UPDATE PROFIL SENDIRI / ADMIN UPDATE SIAPA SAJA
+PUT http://localhost:8080/api/v1/users/{{ user_id }}
+Authorization: Bearer <your access token>
+Content-Type: application/json
+
+{
+    "username": "wahyujati",
+    "name": "Wahyujati",
+    "email": "wahyuupdated@mail.com"
+}
+
+###
+
+### GANTI PASSWORD
+PUT http://localhost:8080/api/v1/users/{{ user_id }}/password
+Authorization: Bearer <your access token>
+Content-Type: application/json
+
+{
+    "old_password": "wahyusuperkuat",
+    "new_password": "admin123"
+}
+
+###
+
+### DELETE USER (admin only)
+DELETE http://localhost:8080/api/v1/users/{{ user_id }}
+Authorization: Bearer <your access token>

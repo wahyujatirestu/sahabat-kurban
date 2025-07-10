@@ -145,7 +145,6 @@ Authorization: Bearer <your access token>
 
 
 
-
 ### ====================== HEWAN KURBAN ======================== ###
 
 ### [ADMIN] Create Hewan Kurban
@@ -179,4 +178,32 @@ Authorization: Bearer <your access token>
 
 ### [ALL] Get Hewan by ID
 GET http://localhost:8080/api/v1/hewan-kurban/{{ hewan_kurban id }}
+Authorization: Bearer <your access token>
+
+
+
+
+### ====================== PEKURBAN HEWAN ======================== ###
+
+### Create Patungan (Users can only manage their own Pekurban data, while admins and committee members are allowed to input data for any user.)
+POST http://localhost:8080/api/v1/patungan
+Authorization: Bearer <your access token>
+Content-Type: application/json
+
+{
+    "pekurban_id": "",
+    "hewan_id": "",
+    "porsi": 0.143
+}
+
+### Get Patungan by Hewan (public)
+GET http://localhost:8080/api/v1/patungan/hewan/{{ target_hewan_id }}
+Authorization: Bearer <your access token>
+
+### Get Patungan by Pekurban (public)
+GET http://localhost:8080/api/v1/patungan/pekurban/{{ your_pekurban_id }}
+Authorization: Bearer <your access token>
+
+### Delete Patungan (only admin)
+DELETE http://localhost:8080/api/v1/patungan/{{ pekurban_id }}/{{ hewan_id }}
 Authorization: Bearer <your access token>

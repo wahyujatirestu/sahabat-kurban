@@ -98,7 +98,7 @@ func (s *pekurbanService) GetById(ctx context.Context, id uuid.UUID)(*dto.Pekurb
 }
 
 func (s *pekurbanService) GetByUserId(ctx context.Context, userID uuid.UUID)(*dto.PekurbanResponse, error) {
-	p, err := s.pRepo.FindById(ctx, userID)
+	p, err := s.pRepo.FindByUserId(ctx, userID)
 	if err != nil || p == nil {
 		return nil, err
 	}

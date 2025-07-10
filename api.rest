@@ -1,6 +1,6 @@
 ### ================================= AUTH ====================================== ###
 
-### REGISTER USER (umum)
+### Register User (Public)
 POST http://localhost:8080/api/v1/auth/register
 Content-Type: application/json
 
@@ -11,7 +11,7 @@ Content-Type: application/json
     "password": "admin123"
 }
 
-### LOGIN (email or username)
+### Login (email or username)
 POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
@@ -20,7 +20,7 @@ Content-Type: application/json
     "password": ""
 }
 
-### REFRESH TOKEN
+### Refresh Token
 POST http://localhost:8080/api/v1/auth/refresh
 Content-Type: application/json
 
@@ -28,7 +28,7 @@ Content-Type: application/json
     "refreshToken": "<your refresh token>"
 }
 
-### LOGOUT
+### Logout
 POST http://localhost:8080/api/v1/auth/logout
 Content-Type: application/json
 
@@ -36,7 +36,7 @@ Content-Type: application/json
     "refreshToken": "<your refresh token>"
 }
 
-### BUAT ADMIN BARU (admin only)
+### Create/Register new admin (admin only)
 POST http://localhost:8080/api/v1/users/register
 Authorization: Bearer <your access token>
 Content-Type: application/json
@@ -49,7 +49,7 @@ Content-Type: application/json
     "role": "admin"
 }
 
-### PROMOSI USER JADI PANITIA (admin only)
+### Promote User to Committee (admin only)
 PATCH http://localhost:8080/api/v1/users/{{ user_id }}/role
 Authorization: Bearer <your access token>
 Content-Type: application/json
@@ -63,19 +63,19 @@ Content-Type: application/json
 
 ### =========================== USERS ============================== ###
 
-### GET SEMUA USER (admin only)
+### Get All User (admin only)
 GET http://localhost:8080/api/v1/users
 Authorization: Bearer <your access token>
 
-### GET USER BY ID (admin only)
+### Get User By ID (admin only)
 GET http://localhost:8080/api/v1/users/{{ user_id }}
 Authorization: Bearer <your access token>
 
-### GET PROFILE SENDIRI
+### Get Own Profile
 GET http://localhost:8080/api/v1/users/me
 Authorization: Bearer <your access token>
 
-### UPDATE PROFIL 
+### Update Profile
 PUT http://localhost:8080/api/v1/users/{{ user_id }}
 Authorization: Bearer <your access token>
 Content-Type: application/json
@@ -86,7 +86,7 @@ Content-Type: application/json
     "email": ""
 }
 
-### GANTI PASSWORD
+### Change Password
 PUT http://localhost:8080/api/v1/users/{{ user_id }}/password
 Authorization: Bearer <your access token>
 Content-Type: application/json

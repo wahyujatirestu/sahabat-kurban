@@ -118,7 +118,6 @@ func (s *pekurbanService) Update(ctx context.Context, id uuid.UUID, req dto.Upda
 	p.Phone = &req.Phone
 	p.Email = &req.Email
 	p.Alamat = &req.Alamat
-	p.Updated_At = time.Now()
 
 	return s.pRepo.Update(ctx, p)
 }

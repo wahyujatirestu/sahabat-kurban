@@ -91,7 +91,6 @@ func (s *userService) UpdateRole(ctx context.Context, userID uuid.UUID, role str
 	}
 
 	user.Role = role
-	user.Updated_At = time.Now()
 
 	return s.userRepo.Update(ctx, user)
 }

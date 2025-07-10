@@ -83,7 +83,7 @@ func (r *pekurbanRepository) FindByUserId(ctx context.Context, userID uuid.UUID)
 }
 
 func (r *pekurbanRepository) Update(ctx context.Context, p *model.Pekurban) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE pekurban SET name=$1, phone=$2, email=$3, alamat=$4, updated_at=now() WHERE id=$5`, p.Name, p.Phone, p.Email, p.Alamat, p.ID)
+	_, err := r.db.ExecContext(ctx, `UPDATE pekurban SET name=$1, phone=$2, email=$3, alamat=$4 WHERE id=$5`, p.Name, p.Phone, p.Email, p.Alamat, p.ID)
 	return err
 }
 

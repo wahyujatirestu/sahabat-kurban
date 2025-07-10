@@ -91,7 +91,7 @@ func (r *userRepository) FindById(ctx context.Context, id uuid.UUID) (*model.Use
 }
 
 func (r *userRepository) Update(ctx context.Context, user *model.User) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE users SET username=$1, name=$2, email=$3, role=$4, updated_at=now() WHERE id=$5`, user.Username, user.Name, user.Email, user.Role, user.ID)
+	_, err := r.db.ExecContext(ctx, `UPDATE users SET username=$1, name=$2, email=$3, role=$4 WHERE id=$5`, user.Username, user.Name, user.Email, user.Role, user.ID)
 	return err
 }
 

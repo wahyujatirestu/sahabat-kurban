@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/wahyujatirestu/sahabat-kurban/model"
@@ -74,6 +75,18 @@ func (r *hewanKurbanRepository) Update(ctx context.Context, h *model.HewanKurban
 }
 
 func (r *hewanKurbanRepository) Delete(ctx context.Context, id uuid.UUID) error {
-	_, err := r.db.ExecContext(ctx, `DELETE FROM hewan_kurban WHERE id=$1`, id)
-	return err
+	res, err := r.db.ExecContext(ctx, `DELETE FROM hewan_kurban WHERE id = $1`, id)
+	if err != nil {
+		return err
+	}
+
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return errors.New("Hewan kurban not found")
+	}
+
+	return nil
 }

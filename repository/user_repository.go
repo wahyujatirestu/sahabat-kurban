@@ -96,11 +96,23 @@ func (r *userRepository) Update(ctx context.Context, user *model.User) error {
 }
 
 func (r *userRepository) UpdatePassword(ctx context.Context, userID uuid.UUID, newHashed string) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE users SET password=$1, updated_at=now() WHERE id=$2`, newHashed, userID)
+	_, err := r.db.ExecContext(ctx, `UPDATE users SET password=$1 WHERE id=$2`, newHashed, userID)
 	return err
 }
 
 func (r *userRepository) Delete(ctx context.Context, id uuid.UUID) error {
-	_, err := r.db.ExecContext(ctx, `DELETE FROM users WHERE id=$1`, id)
-	return err
+	res, err := r.db.ExecContext(ctx, `DELETE FROM users WHERE id = $1`, id)
+	if err != nil {
+		return err
+	}
+
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return errors.New("User not found")
+	}
+
+	return nil
 }

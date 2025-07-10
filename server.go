@@ -18,16 +18,18 @@ import (
 )
 
 type Server struct {
-	userRepo 		repository.UserRepository
-	pekurbanRepo 	repository.PekurbanRepository
-	userService 	service.UserService
-	authService 	service.AuthService
-	jwtService		utilsservice.JWTService
-	pekurbanService service.PekurbanService
-	rtRepo 			utilsrepo.RefreshTokenRepository
-	db 				*sql.DB
-	engine 			*gin.Engine
-	host			string
+	userRepo 			repository.UserRepository
+	pekurbanRepo 		repository.PekurbanRepository
+	hewanKurbanRepo		repository.HewanKurbanRepository
+	userService 		service.UserService
+	authService 		service.AuthService
+	jwtService			utilsservice.JWTService
+	pekurbanService 	service.PekurbanService
+	hewanKurbanService 	service.HewanKurbanService
+	rtRepo 				utilsrepo.RefreshTokenRepository
+	db 					*sql.DB
+	engine 				*gin.Engine
+	host				string
 }
 
 func NewServer() *Server {
@@ -46,10 +48,12 @@ func NewServer() *Server {
 	userRepo := repository.NewUserRepository(db)
 	rtRepo := utilsrepo.NewRefreshTokenRepository(db)
 	pekurbanRepo := repository.NewPekurbanRepository(db)
+	hewanKurbanRepo := repository.NewHewanKurbanRepository(db)
 	jwtService := utilsservice.NewJWTServie(cfg, rtRepo)
 	authService := service.NewAuthService(cfg, userRepo, rtRepo, jwtService)
 	userService := service.NewUserService(userRepo)
 	pekurbanService := service.NewPekurbanService(pekurbanRepo, userRepo)
+	hewanKurbanService := service.NewHewanKurbanService(hewanKurbanRepo)
 
 	engine := gin.Default()
 	host := fmt.Sprintf(":%s", cfg.ApiPort)
@@ -60,11 +64,13 @@ func NewServer() *Server {
 		userRepo: userRepo,
 		rtRepo: rtRepo,
 		pekurbanRepo: pekurbanRepo,
+		hewanKurbanRepo: hewanKurbanRepo,
 		db: db,
 		authService: authService,
 		userService: userService,
 		jwtService: jwtService,
 		pekurbanService: pekurbanService,
+		hewanKurbanService: hewanKurbanService,
 		engine: engine,
 		host: host,
 	}
@@ -77,10 +83,12 @@ func (s *Server) SetupRoutes() {
 	authController := controller.NewAuthController(s.authService)
 	userController := controller.NewUserController(s.userService)
 	pekurbanController := controller.NewPekurbanController(s.pekurbanService)
+	hewanKurbanController := controller.NewHewanKurbanController(s.hewanKurbanService)
 
 	routes.AuthRoute(apiV1, authController)
 	routes.UserRoute(apiV1, userController, authMw)
 	routes.PekurbanRoute(apiV1, pekurbanController, authMw)
+	routes.HewanKurbanRoute(apiV1, hewanKurbanController, authMw)
 }
 
 func (s *Server) Run() {

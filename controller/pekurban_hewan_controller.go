@@ -102,7 +102,7 @@ func (c *PekurbanHewanController) Delete(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, gin.H{"message": "Relasi patungan dihapus"})
+	ctx.JSON(200, gin.H{"message": "Joint contribution relation has been deleted successfully"})
 }
 
 

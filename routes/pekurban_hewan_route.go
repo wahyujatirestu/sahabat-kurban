@@ -10,6 +10,7 @@ func PekurbanHewanRoute(rg *gin.RouterGroup, c *controller.PekurbanHewanControll
 	r := rg.Group("/patungan")
 	{
 		r.POST("/", authMw.RequireToken(), c.Create)
+		r.GET("/", authMw.RequireToken("admin", "panitia"), c.GetAll)
 		r.GET("/hewan/:hewan_id", authMw.RequireToken(), c.GetByHewanID)
 		r.GET("/pekurban/:pekurban_id", authMw.RequireToken(), c.GetByPekurbanID)
 		r.DELETE("/:pekurban_id/:hewan_id", authMw.RequireToken("admin"), c.Delete)

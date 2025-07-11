@@ -12,9 +12,10 @@ import (
 
 type PekurbanHewanService interface {
 	Create(ctx context.Context, req dto.CreatePekurbanHewanRequest) error
-	Delete(ctx context.Context, pekurbanID, hewanID uuid.UUID) error
+	GetAll(ctx context.Context) ([]dto.PekurbanHewanResponse, error)
 	GetByHewanId(ctx context.Context, hewanID uuid.UUID) ([]dto.PekurbanHewanResponse, error)
 	GetByPekurbanId(ctx context.Context, pekurbanID uuid.UUID) ([]dto.PekurbanHewanResponse, error)
+	Delete(ctx context.Context, pekurbanID, hewanID uuid.UUID) error
 }
 
 type pekurbanHewanService struct {
@@ -44,6 +45,24 @@ func (s *pekurbanHewanService) Create(ctx context.Context, req dto.CreatePekurba
 
 	return s.repo.Create(ctx, data)
 }
+
+func (s *pekurbanHewanService) GetAll(ctx context.Context) ([]dto.PekurbanHewanResponse, error) {
+	list, err := s.repo.FindAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var res []dto.PekurbanHewanResponse
+	for _, rel := range list {
+		res = append(res, dto.PekurbanHewanResponse{
+			PekurbanID: rel.PekurbanID.String(),
+			HewanID:    rel.HewanID.String(),
+			Porsi:      rel.Porsi,
+		})
+	}
+	return res, nil
+}
+
 
 func (s *pekurbanHewanService) GetByHewanId(ctx context.Context, hewanID uuid.UUID) ([]dto.PekurbanHewanResponse, error) {
 	list, err := s.repo.GetByHewanId(ctx, hewanID)

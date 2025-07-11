@@ -11,6 +11,7 @@ import (
 
 type PekurbanHewanRepository interface {
 	Create(ctx context.Context, ph *model.PekurbanHewan) error
+	FindAll(ctx context.Context) ([]*model.PekurbanHewan, error)
 	GetByHewanId(ctx context.Context, hewanID uuid.UUID) ([]*model.PekurbanHewan, error)
 	GetByPekurbanId(ctx context.Context, pekurbanID uuid.UUID) ([]*model.PekurbanHewan, error)
 	Delete(ctx context.Context, pekurbanID, hewanID uuid.UUID) error
@@ -28,6 +29,25 @@ func (r *pekurbanHewanRepository) Create(ctx context.Context, ph *model.Pekurban
 	_, err := r.db.ExecContext(ctx, `INSERT INTO pekurban_hewan (pekurban_id, hewan_id, porsi) VALUES ($1, $2, $3)`, ph.PekurbanID, ph.HewanID, ph.Porsi)
 	return err
 }
+
+func (r *pekurbanHewanRepository) FindAll(ctx context.Context) ([]*model.PekurbanHewan, error) {
+	rows, err := r.db.QueryContext(ctx, `SELECT pekurban_id, hewan_id, porsi FROM pekurban_hewan`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var result []*model.PekurbanHewan
+	for rows.Next() {
+		var rel model.PekurbanHewan
+		if err := rows.Scan(&rel.PekurbanID, &rel.HewanID, &rel.Porsi); err != nil {
+			return nil, err
+		}
+		result = append(result, &rel)
+	}
+	return result, nil
+}
+
 
 func (r *pekurbanHewanRepository) GetByHewanId(ctx context.Context, hewanID uuid.UUID) ([]*model.PekurbanHewan, error) {
 	rows, err := r.db.QueryContext(ctx, `SELECT pekurban_id, hewan_id, porsi FROM pekurban_hewan WHERE hewan_id = $1`, hewanID)

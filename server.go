@@ -52,7 +52,7 @@ func NewServer() *Server {
 	pekurbanRepo := repository.NewPekurbanRepository(db)
 	hewanKurbanRepo := repository.NewHewanKurbanRepository(db)
 	pekurbanHewanRepo := repository.NewPekurbanHewanRepository(db)
-	jwtService := utilsservice.NewJWTServie(cfg, rtRepo)
+	jwtService := utilsservice.NewJWTServie(cfg, rtRepo, userRepo)
 	authService := service.NewAuthService(cfg, userRepo, rtRepo, jwtService)
 	userService := service.NewUserService(userRepo)
 	pekurbanService := service.NewPekurbanService(pekurbanRepo, userRepo)

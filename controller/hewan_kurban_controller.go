@@ -34,6 +34,16 @@ func (c *HewanKurbanController) Create(ctx *gin.Context) {
 	})
 }
 
+func (c *PekurbanHewanController) GetAll(ctx *gin.Context) {
+	list, err := c.service.GetAll(ctx.Request.Context())
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(200, gin.H{"data": list})
+}
+
+
 func (c *HewanKurbanController) GetByID(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)

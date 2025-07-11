@@ -154,7 +154,7 @@ Content-Type: application/json
 
 {
     "jenis": "sapi",
-    "berat": 350.5,
+    "berat": 509.3,
     "tanggal_pendaftaran": "2025-07-10"
 }
 
@@ -191,13 +191,17 @@ Authorization: Bearer <your access token>
 Content-Type: application/json
 
 {
-    "pekurban_id": "",
-    "hewan_id": "",
-    "porsi": 0.143
+    "pekurban_id": "<pekurban id>",
+    "hewan_id": "<user id>",
+    "porsi": 0.300
 }
 
+### Get All Patungan (admin/panitia only)
+GET http://localhost:8080/api/v1/patungan
+Authorization: Bearer <your access token>
+
 ### Get Patungan by Hewan (public)
-GET http://localhost:8080/api/v1/patungan/hewan/{{ target_hewan_id }}
+GET http://localhost:8080/api/v1/patungan/hewan/{{ hewan_id }}
 Authorization: Bearer <your access token>
 
 ### Get Patungan by Pekurban (public)

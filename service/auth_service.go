@@ -102,7 +102,12 @@ func (s *authService) RefreshToken(ctx context.Context, refreshToken string) (*d
 		return nil, errors.New("Invalid user ID")
 	}
 
-	accessToken, err := s.jwtService.GenerateAccessToken(userID, claims.Role)
+	user, err := s.userRepo.FindById(ctx, userID)
+	if err != nil || user == nil {
+		return nil, errors.New("User not found")
+	}
+
+	accessToken, err := s.jwtService.GenerateAccessToken(user.ID, user.Role)
 	if err != nil {
 		return nil, err
 	}

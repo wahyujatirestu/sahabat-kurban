@@ -10,6 +10,7 @@ import (
 	"github.com/wahyujatirestu/sahabat-kurban/config"
 	"github.com/wahyujatirestu/sahabat-kurban/utils/model"
 	"github.com/wahyujatirestu/sahabat-kurban/utils/repository"
+	userutils "github.com/wahyujatirestu/sahabat-kurban/repository"
 )
 
 type JWTService interface {
@@ -25,11 +26,12 @@ type JWTService interface {
 type jwtService struct {
 	cfg		*config.Config
 	refreshToken repository.RefreshTokenRepository
+	userRepo userutils.UserRepository
 }
 
-func NewJWTServie(cfg *config.Config, repo repository.RefreshTokenRepository, ) JWTService {
+func NewJWTServie(cfg *config.Config, repo repository.RefreshTokenRepository, userRepo userutils.UserRepository) JWTService {
 	return &jwtService {
-		cfg: cfg, refreshToken: repo,
+		cfg: cfg, refreshToken: repo, userRepo: userRepo,
 	}
 }
 
@@ -50,9 +52,14 @@ func (s *jwtService) GenerateAccessToken(userID uuid.UUID, role string) (string,
 }
 
 func (s *jwtService) GenerateRefreshToken(ctx context.Context, userID uuid.UUID) (string, error) {
+	user, err := s.userRepo.FindById(ctx, userID)
+	if err != nil || user == nil {
+		return "", errors.New("failed to get user for refresh token")
+	}
+
 	claims := &model.JWTPayloadClaim{
 		UserId: userID.String(),
-		Role:   "user",
+		Role:   user.Role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    s.cfg.AppName,
 			Subject:   userID.String(),

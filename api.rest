@@ -183,6 +183,7 @@ Authorization: Bearer <your access token>
 
 
 
+
 ### ====================== PEKURBAN HEWAN ======================== ###
 
 ### Create Patungan (Users can only manage their own Pekurban data, while admins and committee members are allowed to input data for any user.)
@@ -210,4 +211,46 @@ Authorization: Bearer <your access token>
 
 ### Delete Patungan (only admin)
 DELETE http://localhost:8080/api/v1/patungan/{{ pekurban_id }}/{{ hewan_id }}
+Authorization: Bearer <your access token>
+
+
+
+
+
+### ====================== PENYEMBELIHAN HEWAN ======================== ###
+
+### Create penyembelihan (admin/panitia)
+POST http://localhost:8080/api/v1/penyembelihan
+Authorization: Bearer <your refresh token>
+Content-Type: application/json
+
+{
+    "hewan_id": "<hewan_id>",
+    "tanggal_penyembelihan": "2025-07-15T09:00:00Z",
+    "lokasi": "Masjid Al-Barokah",
+    "urutan_rencana": 1
+}
+
+### Update penyembelihan (admin/panitia)
+PUT http://localhost:8080/api/v1/penyembelihan/{{ penyembelihan_id }}
+Authorization: Bearer <your access token>
+Content-Type: application/json
+
+{
+    "tanggal_penyembelihan": "2025-07-15T10:00:00Z",
+    "lokasi": "Lapangan RT 04",
+    "urutan_rencana": 1,
+    "urutan_aktual": 2
+}
+
+### Delete penyembelihan (admin only)
+DELETE http://localhost:8080/api/v1/penyembelihan/{{ penyembelihan_id }}
+Authorization: Bearer <your access token>
+
+### Get all penyembelihan (all roles)
+GET http://localhost:8080/api/v1/penyembelihan
+Authorization: Bearer <your access token>
+
+### Get penyembelihan by ID
+GET http://localhost:8080/api/v1/penyembelihan/{{ penyembelihan_id }}
 Authorization: Bearer <your access token>

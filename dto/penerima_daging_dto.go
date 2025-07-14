@@ -3,7 +3,7 @@ package dto
 import "github.com/wahyujatirestu/sahabat-kurban/model"
 
 type CreatePenerimaRequest struct {
-	Nama       string  `json:"nama" binding:"required"`
+	Name       string  `json:"name"`
 	Alamat     *string `json:"alamat,omitempty"`
 	Phone      *string `json:"phone,omitempty"`
 	Status     string  `json:"status" binding:"required,oneof=warga dhuafa panitia pekurban"`
@@ -11,7 +11,7 @@ type CreatePenerimaRequest struct {
 }
 
 type UpdatePenerimaRequest struct {
-	Nama       string  `json:"nama" binding:"required"`
+	Name       *string `json:"name,omitempty"`
 	Alamat     *string `json:"alamat,omitempty"`
 	Phone      *string `json:"phone,omitempty"`
 	Status     string  `json:"status" binding:"required,oneof=warga dhuafa panitia pekurban"`
@@ -20,7 +20,7 @@ type UpdatePenerimaRequest struct {
 
 type PenerimaResponse struct {
 	ID         string  `json:"id"`
-	Nama       string  `json:"nama"`
+	Name       string  `json:"name"`
 	Alamat     *string `json:"alamat,omitempty"`
 	Phone      *string `json:"phone,omitempty"`
 	Status     string  `json:"status"`
@@ -37,7 +37,7 @@ func ToPenerimaResponse(p *model.PenerimaDaging) PenerimaResponse {
 
 	return 	PenerimaResponse{
 		ID: p.ID.String(),
-		Nama: p.Nama,
+		Name: p.Name,
 		Alamat: p.Alamat,
 		Phone: p.Phone,
 		Status: p.Status,

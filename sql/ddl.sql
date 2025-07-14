@@ -103,7 +103,7 @@ FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 -- Tabel penerima_daging dengan relasi ke pekurban
 CREATE TABLE penerima_daging (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nama VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     alamat TEXT,
     phone VARCHAR(20),
     status status_penerima_enum NOT NULL DEFAULT 'warga',

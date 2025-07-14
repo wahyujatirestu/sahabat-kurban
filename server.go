@@ -23,6 +23,7 @@ type Server struct {
 	hewanKurbanRepo			repository.HewanKurbanRepository
 	pekurbanHewanRepo		repository.PekurbanHewanRepository
 	penyembelihanRepo		repository.PenyembelihanRepository
+	penerimaRepo			repository.PenerimaDagingRepository
 	userService 			service.UserService
 	authService 			service.AuthService
 	jwtService				utilsservice.JWTService
@@ -30,6 +31,7 @@ type Server struct {
 	hewanKurbanService 		service.HewanKurbanService
 	pekurbanHewanService 	service.PekurbanHewanService
 	penyembelihanService 	service.PenyembelihanService
+	penerimaService 		service.PenerimaDagingService
 	rtRepo 					utilsrepo.RefreshTokenRepository
 	db 						*sql.DB
 	engine 					*gin.Engine
@@ -55,6 +57,7 @@ func NewServer() *Server {
 	hewanKurbanRepo := repository.NewHewanKurbanRepository(db)
 	pekurbanHewanRepo := repository.NewPekurbanHewanRepository(db)
 	penyembelihanRepo := repository.NewPenyembelihanRepository(db)
+	penerimaRepo := repository.NewPenerimaDagingRepository(db)
 	jwtService := utilsservice.NewJWTServie(cfg, rtRepo, userRepo)
 	authService := service.NewAuthService(cfg, userRepo, rtRepo, jwtService)
 	userService := service.NewUserService(userRepo)
@@ -62,6 +65,7 @@ func NewServer() *Server {
 	hewanKurbanService := service.NewHewanKurbanService(hewanKurbanRepo)
 	pekurbanHewanService := service.NewPekurbanHewanService(pekurbanHewanRepo)
 	penyembelihanService := service.NewPenyembelihanService(penyembelihanRepo)
+	penerimaService := service.NewPenerimaDagingService(penerimaRepo, pekurbanRepo)
 
 	engine := gin.Default()
 	host := fmt.Sprintf(":%s", cfg.ApiPort)
@@ -75,6 +79,7 @@ func NewServer() *Server {
 		hewanKurbanRepo: hewanKurbanRepo,
 		pekurbanHewanRepo: pekurbanHewanRepo,
 		penyembelihanRepo: penyembelihanRepo,
+		penerimaRepo: penerimaRepo,
 		db: db,
 		authService: authService,
 		userService: userService,
@@ -83,6 +88,7 @@ func NewServer() *Server {
 		hewanKurbanService: hewanKurbanService,
 		pekurbanHewanService: pekurbanHewanService,
 		penyembelihanService: penyembelihanService,
+		penerimaService: penerimaService,
 		engine: engine,
 		host: host,
 	}
@@ -98,6 +104,7 @@ func (s *Server) SetupRoutes() {
 	hewanKurbanController := controller.NewHewanKurbanController(s.hewanKurbanService)
 	pekurbanHewanController := controller.NewPekurbanHewanController(s.pekurbanHewanService, s.pekurbanService)
 	penyembelihanController := controller.NewPenyembelihanController(s.penyembelihanService)
+	penerimaController := controller.NewPenerimaDagingController(s.penerimaService)
 
 	routes.AuthRoute(apiV1, authController)
 	routes.UserRoute(apiV1, userController, authMw)
@@ -105,6 +112,7 @@ func (s *Server) SetupRoutes() {
 	routes.HewanKurbanRoute(apiV1, hewanKurbanController, authMw)
 	routes.PekurbanHewanRoute(apiV1, pekurbanHewanController, authMw)
 	routes.PenyembelihanRoute(apiV1, penyembelihanController, authMw)
+	routes.PenerimaDagingRoute(apiV1, penerimaController, authMw)
 }
 
 func (s *Server) Run() {

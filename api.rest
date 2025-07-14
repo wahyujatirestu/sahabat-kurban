@@ -254,3 +254,49 @@ Authorization: Bearer <your access token>
 ### Get penyembelihan by ID
 GET http://localhost:8080/api/v1/penyembelihan/{{ penyembelihan_id }}
 Authorization: Bearer <your access token>
+
+
+
+
+
+### ========================== PENERIMA DAGING ============================ ###
+
+### Create penerima daging (admin/panitia)
+POST http://localhost:8080/api/v1/penerima
+Authorization: Bearer <your access token>
+Content-Type: application/json
+
+{
+    "name": "Septi Komala",
+    "alamat": "Kp. Dukuh 2",
+    "phone": "09888687986",
+    "status": "warga",
+    "pekurban_id": null
+}
+
+
+### Get all penerima daging (all roles)
+GET http://localhost:8080/api/v1/penerima
+Authorization: Bearer <your access token>
+
+### Get by ID (all roles)
+GET http://localhost:8080/api/v1/penerima/{{ user_id }}
+Authorization: Bearer <your access token>
+
+### Update penerima daging (admin/panitia)
+PUT http://localhost:8080/api/v1/penerima/{{ user_id }}
+Authorization: Bearer <your access token>
+Content-Type: application/json
+
+{
+    "nama": null,
+    "alamat": "Jalan Melati No.12 Blok B",
+    "phone": null,
+    "status": "pekurban",
+    "pekurban_id": null
+}
+
+### Delete penerima daging (admin only)
+DELETE http://localhost:8080/api/v1/penerima/{{ user_id }}
+Authorization: Bearer <your access token>
+

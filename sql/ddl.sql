@@ -134,20 +134,26 @@ CREATE TRIGGER trigger_update_distribusi_daging
 BEFORE UPDATE ON distribusi_daging
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- Tabel pembayaran_kurban (fleksibel metode dan status)
+-- Tabel pembayaran_kurban
 CREATE TABLE pembayaran_kurban (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    order_id VARCHAR(100) NOT NULL UNIQUE,
+    transaction_id VARCHAR(100) NOT NULL UNIQUE,
     pekurban_id UUID NOT NULL,
     metode VARCHAR(50) NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    payment_type VARCHAR(50),
+    va_number VARCHAR(50),
     jumlah NUMERIC(12,2) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    fraud_status VARCHAR(20),
+    approval_code VARCHAR(50),
+    transaction_time TIMESTAMP WITH TIME ZONE,
     tanggal_pembayaran TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    payment_url TEXT,
-    transaction_id VARCHAR(100),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     FOREIGN KEY (pekurban_id) REFERENCES pekurban(id) ON DELETE CASCADE
 );
+
 
 CREATE TRIGGER trigger_update_pembayaran_kurban
 BEFORE UPDATE ON pembayaran_kurban

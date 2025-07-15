@@ -58,11 +58,10 @@ func (r *hewanKurbanRepository) GetById(ctx context.Context, id uuid.UUID) (*mod
 	var h model.HewanKurban
 	err := row.Scan(&h.ID, &h.Jenis, &h.Berat, &h.TglPendaftaran, &h.Created_At, &h.Updated_At)
 
-	if err == sql.ErrNoRows {
-		return nil, nil
-	}
-
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
 		return nil, err
 	}
 

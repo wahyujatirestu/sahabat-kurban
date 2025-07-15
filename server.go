@@ -24,6 +24,7 @@ type Server struct {
 	pekurbanHewanRepo		repository.PekurbanHewanRepository
 	penyembelihanRepo		repository.PenyembelihanRepository
 	penerimaRepo			repository.PenerimaDagingRepository
+	distribusiRepo			repository.DistribusiDagingRepository
 	userService 			service.UserService
 	authService 			service.AuthService
 	jwtService				utilsservice.JWTService
@@ -32,6 +33,7 @@ type Server struct {
 	pekurbanHewanService 	service.PekurbanHewanService
 	penyembelihanService 	service.PenyembelihanService
 	penerimaService 		service.PenerimaDagingService
+	distribusiService 		service.DistribusiDagingService
 	rtRepo 					utilsrepo.RefreshTokenRepository
 	db 						*sql.DB
 	engine 					*gin.Engine
@@ -58,6 +60,7 @@ func NewServer() *Server {
 	pekurbanHewanRepo := repository.NewPekurbanHewanRepository(db)
 	penyembelihanRepo := repository.NewPenyembelihanRepository(db)
 	penerimaRepo := repository.NewPenerimaDagingRepository(db)
+	distribusiRepo := repository.NewDistribusiDagingRepository(db)
 	jwtService := utilsservice.NewJWTServie(cfg, rtRepo, userRepo)
 	authService := service.NewAuthService(cfg, userRepo, rtRepo, jwtService)
 	userService := service.NewUserService(userRepo)
@@ -66,6 +69,7 @@ func NewServer() *Server {
 	pekurbanHewanService := service.NewPekurbanHewanService(pekurbanHewanRepo)
 	penyembelihanService := service.NewPenyembelihanService(penyembelihanRepo)
 	penerimaService := service.NewPenerimaDagingService(penerimaRepo, pekurbanRepo)
+	distribusiService := service.NewDistribusiDagingService(distribusiRepo, penerimaRepo, hewanKurbanRepo)
 
 	engine := gin.Default()
 	host := fmt.Sprintf(":%s", cfg.ApiPort)
@@ -80,6 +84,7 @@ func NewServer() *Server {
 		pekurbanHewanRepo: pekurbanHewanRepo,
 		penyembelihanRepo: penyembelihanRepo,
 		penerimaRepo: penerimaRepo,
+		distribusiRepo: distribusiRepo,
 		db: db,
 		authService: authService,
 		userService: userService,
@@ -89,6 +94,7 @@ func NewServer() *Server {
 		pekurbanHewanService: pekurbanHewanService,
 		penyembelihanService: penyembelihanService,
 		penerimaService: penerimaService,
+		distribusiService: distribusiService,
 		engine: engine,
 		host: host,
 	}
@@ -105,6 +111,7 @@ func (s *Server) SetupRoutes() {
 	pekurbanHewanController := controller.NewPekurbanHewanController(s.pekurbanHewanService, s.pekurbanService)
 	penyembelihanController := controller.NewPenyembelihanController(s.penyembelihanService)
 	penerimaController := controller.NewPenerimaDagingController(s.penerimaService)
+	distribusiController := controller.NewDistribusiDagingController(s.distribusiService)
 
 	routes.AuthRoute(apiV1, authController)
 	routes.UserRoute(apiV1, userController, authMw)
@@ -113,6 +120,7 @@ func (s *Server) SetupRoutes() {
 	routes.PekurbanHewanRoute(apiV1, pekurbanHewanController, authMw)
 	routes.PenyembelihanRoute(apiV1, penyembelihanController, authMw)
 	routes.PenerimaDagingRoute(apiV1, penerimaController, authMw)
+	routes.DistribusiDagingRoute(apiV1, distribusiController, authMw)
 }
 
 func (s *Server) Run() {

@@ -10,7 +10,7 @@ type CreateDistribusiRequest struct {
 	PenerimaID        string    `json:"penerima_id" binding:"required,uuid"`
 	HewanID           string    `json:"hewan_id" binding:"required,uuid"`
 	JumlahPaket       int       `json:"jumlah_paket" binding:"required,min=1"`
-	TanggalDistribusi time.Time `json:"tanggal_distribusi" binding:"required"`
+	TanggalDistribusi string `json:"tanggal_distribusi" binding:"required"`
 }
 
 type DistribusiResponse struct {

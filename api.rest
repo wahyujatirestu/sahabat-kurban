@@ -261,7 +261,7 @@ Authorization: Bearer <your access token>
 
 ### ========================== PENERIMA DAGING ============================ ###
 
-### Create penerima daging (admin/panitia)
+### Create penerima (admin/panitia)
 POST http://localhost:8080/api/v1/penerima
 Authorization: Bearer <your access token>
 Content-Type: application/json
@@ -300,3 +300,32 @@ Content-Type: application/json
 DELETE http://localhost:8080/api/v1/penerima/{{ user_id }}
 Authorization: Bearer <your access token>
 
+
+
+
+
+### ============================== DISTRIBUSI DAGING ================================ ###
+
+### Create distribusi daging (admin/panitia)
+POST http://localhost:8080/api/v1/distribusi
+Authorization: Bearer <your access token>
+Content-Type: application/json
+
+{
+    "penerima_id": "{{ penerima_id }}",
+    "hewan_id": "{{ hewan_id }}",
+    "jumlah_paket": 1,
+    "tanggal_distribusi": "2025-07-17"
+}
+
+### Get all distribusi (admin/panitia)
+GET http://localhost:8080/api/v1/distribusi
+Authorization: Bearer <your access token>
+
+### Get distribusi by ID (admin/panitia)
+GET http://localhost:8080/api/v1/distribusi/{{ distribusi_id }}
+Authorization: Bearer <your access token>
+
+### Delete distribusi (admin panitia)
+DELETE http://localhost:8080/api/v1/distribusi/{{ distribusi_id }}
+Authorization: Bearer <your access token>

@@ -144,7 +144,7 @@ CREATE TABLE pembayaran_kurban (
     payment_type VARCHAR(50),
     va_number VARCHAR(50),
     jumlah NUMERIC(12,2) NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'settlement', 'failed', 'expired', 'deny')),
     fraud_status VARCHAR(20),
     approval_code VARCHAR(50),
     transaction_time TIMESTAMP WITH TIME ZONE,

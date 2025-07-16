@@ -329,3 +329,38 @@ Authorization: Bearer <your access token>
 ### Delete distribusi (admin panitia)
 DELETE http://localhost:8080/api/v1/distribusi/{{ distribusi_id }}
 Authorization: Bearer <your access token>
+
+
+
+
+
+### ============================ PEMBAYARAN KURBAN =============================== ###
+
+# Create Pembayaran (QRIS)
+POST http://localhost:8080/api/v1/pembayaran
+Authorization: Bearer {{ admin_token }}
+Content-Type: application/json
+
+{
+    "pekurban_id": "b42c2329-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "metode": "qris",
+    "jumlah": 1500000,
+    "customer_name": "Wahyu Restu",
+    "customer_email": "wahyu@example.com",
+    "customer_phone": "081234567890"
+}
+
+###
+# Get All Pembayaran
+GET http://localhost:8080/api/v1/pembayaran
+Authorization: Bearer {{ admin_token }}
+
+###
+# Get by ID
+GET http://localhost:8080/api/v1/pembayaran/{{ pembayaran_id }}
+Authorization: Bearer {{ admin_token }}
+
+###
+# Get by OrderID
+GET http://localhost:8080/api/v1/pembayaran/order/{{ order_id }}
+Authorization: Bearer {{ admin_token }}

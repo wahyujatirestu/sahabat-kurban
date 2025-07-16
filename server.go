@@ -13,6 +13,7 @@ import (
 	"github.com/wahyujatirestu/sahabat-kurban/repository"
 	"github.com/wahyujatirestu/sahabat-kurban/routes"
 	"github.com/wahyujatirestu/sahabat-kurban/service"
+	payserv "github.com/wahyujatirestu/sahabat-kurban/payments/service"
 	utilsrepo "github.com/wahyujatirestu/sahabat-kurban/utils/repository"
 	utilsservice "github.com/wahyujatirestu/sahabat-kurban/utils/service"
 )
@@ -25,6 +26,7 @@ type Server struct {
 	penyembelihanRepo		repository.PenyembelihanRepository
 	penerimaRepo			repository.PenerimaDagingRepository
 	distribusiRepo			repository.DistribusiDagingRepository
+	pembayaranRepo			repository.PembayaranKurbanRepository
 	userService 			service.UserService
 	authService 			service.AuthService
 	jwtService				utilsservice.JWTService
@@ -34,6 +36,8 @@ type Server struct {
 	penyembelihanService 	service.PenyembelihanService
 	penerimaService 		service.PenerimaDagingService
 	distribusiService 		service.DistribusiDagingService
+	midtransService			payserv.MidtransService
+	pembayaranService		service.PembayaranKurbanService
 	rtRepo 					utilsrepo.RefreshTokenRepository
 	db 						*sql.DB
 	engine 					*gin.Engine
@@ -61,6 +65,7 @@ func NewServer() *Server {
 	penyembelihanRepo := repository.NewPenyembelihanRepository(db)
 	penerimaRepo := repository.NewPenerimaDagingRepository(db)
 	distribusiRepo := repository.NewDistribusiDagingRepository(db)
+	pembayaranRepo := repository.NewPembayaranKurbanRepository(db)
 	jwtService := utilsservice.NewJWTServie(cfg, rtRepo, userRepo)
 	authService := service.NewAuthService(cfg, userRepo, rtRepo, jwtService)
 	userService := service.NewUserService(userRepo)
@@ -70,6 +75,8 @@ func NewServer() *Server {
 	penyembelihanService := service.NewPenyembelihanService(penyembelihanRepo)
 	penerimaService := service.NewPenerimaDagingService(penerimaRepo, pekurbanRepo)
 	distribusiService := service.NewDistribusiDagingService(distribusiRepo, penerimaRepo, hewanKurbanRepo)
+	midtransService := payserv.NewMidtransService()
+	pembayaranService := service.NewPembayaranKurbanService(pembayaranRepo, midtransService)
 
 	engine := gin.Default()
 	host := fmt.Sprintf(":%s", cfg.ApiPort)
@@ -85,6 +92,7 @@ func NewServer() *Server {
 		penyembelihanRepo: penyembelihanRepo,
 		penerimaRepo: penerimaRepo,
 		distribusiRepo: distribusiRepo,
+		pembayaranRepo: pembayaranRepo,
 		db: db,
 		authService: authService,
 		userService: userService,
@@ -95,6 +103,8 @@ func NewServer() *Server {
 		penyembelihanService: penyembelihanService,
 		penerimaService: penerimaService,
 		distribusiService: distribusiService,
+		midtransService: midtransService,
+		pembayaranService: pembayaranService,
 		engine: engine,
 		host: host,
 	}
@@ -112,6 +122,7 @@ func (s *Server) SetupRoutes() {
 	penyembelihanController := controller.NewPenyembelihanController(s.penyembelihanService)
 	penerimaController := controller.NewPenerimaDagingController(s.penerimaService)
 	distribusiController := controller.NewDistribusiDagingController(s.distribusiService)
+	pembayaranController := controller.NewPembayaranController(s.pembayaranService, s.pekurbanService)
 
 	routes.AuthRoute(apiV1, authController)
 	routes.UserRoute(apiV1, userController, authMw)
@@ -121,6 +132,7 @@ func (s *Server) SetupRoutes() {
 	routes.PenyembelihanRoute(apiV1, penyembelihanController, authMw)
 	routes.PenerimaDagingRoute(apiV1, penerimaController, authMw)
 	routes.DistribusiDagingRoute(apiV1, distribusiController, authMw)
+	routes.PembayaranRoute(apiV1, pembayaranController, authMw)
 }
 
 func (s *Server) Run() {

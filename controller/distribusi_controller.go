@@ -61,6 +61,25 @@ func (c *DistribusiDagingController) GetByID(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{"data": res})
 }
 
+func (c *DistribusiDagingController) GetTotalPaket(ctx *gin.Context) {
+	total, err := c.service.GetTotalDistribusiPaket(ctx.Request.Context())
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(200, gin.H{"total_distribusi_paket": total})
+}
+
+func (c *DistribusiDagingController) GetPenerimaBelumDistribusi(ctx *gin.Context) {
+	data, err := c.service.GetPenerimaBelumTerdistribusi(ctx.Request.Context())
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(200, gin.H{"data": data})
+}
+
+
 func (c *DistribusiDagingController) Delete(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)

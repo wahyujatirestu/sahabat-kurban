@@ -51,5 +51,12 @@ func (m *midtransService) Charge(req *model.MidtransChargeRequest) (*model.Midtr
 		return nil, fmt.Errorf("Midtrans error: %s", response.StatusMessage)
 	}
 
+	for _, action := range response.Actions {
+		if action.Name == "generate-qr-code" {
+			response.QRUrl = &action.URL
+			break
+		}
+	}
+
 	return &response, nil
 }

@@ -14,6 +14,7 @@ type DistribusiDagingRepository interface {
 	GetAll(ctx context.Context) ([]*model.DistribusiDaging, error)	
 	GetByID(ctx context.Context, id uuid.UUID) (*model.DistribusiDaging, error)
 	FindByPenerimaID(ctx context.Context, penerimaID uuid.UUID) (*model.DistribusiDaging, error)
+	CountTotalPaket(ctx context.Context) (int, error)
 	Delete(ctx context.Context, id uuid.UUID) error
 }
 
@@ -74,6 +75,14 @@ func (r *distribusiDagingRepository) FindByPenerimaID(ctx context.Context, pener
 
 	return &d, nil
 }
+
+func (r *distribusiDagingRepository) CountTotalPaket(ctx context.Context) (int, error) {
+	var total int
+	query := `SELECT COALESCE(SUM(jumlah_paket), 0) FROM distribusi_daging`
+	err := r.db.QueryRowContext(ctx, query).Scan(&total)
+	return total, err
+}
+
 
 func (r *distribusiDagingRepository) Delete(ctx context.Context, id uuid.UUID) error {
 	res, err := r.db.ExecContext(ctx, `DELETE FROM distribusi_daging WHERE id = $1`, id)

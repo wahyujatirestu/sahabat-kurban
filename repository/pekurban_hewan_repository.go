@@ -14,6 +14,7 @@ type PekurbanHewanRepository interface {
 	FindAll(ctx context.Context) ([]*model.PekurbanHewan, error)
 	GetByHewanId(ctx context.Context, hewanID uuid.UUID) ([]*model.PekurbanHewan, error)
 	GetByPekurbanId(ctx context.Context, pekurbanID uuid.UUID) ([]*model.PekurbanHewan, error)
+	Update(ctx context.Context, ph *model.PekurbanHewan) error
 	Delete(ctx context.Context, pekurbanID, hewanID uuid.UUID) error
 }
 
@@ -85,6 +86,26 @@ func (r *pekurbanHewanRepository) GetByPekurbanId(ctx context.Context, pekurbanI
 		result = append(result, &ph)
 	}
 	return result, nil
+}
+
+func (r *pekurbanHewanRepository) Update(ctx context.Context, ph *model.PekurbanHewan) error {
+	result, err := r.db.ExecContext(ctx,
+		`UPDATE pekurban_hewan SET porsi=$3 WHERE pekurban_id=$1 AND hewan_id=$2`,
+		ph.PekurbanID, ph.HewanID, ph.Porsi)
+
+	if err != nil {
+		return err
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return errors.New("data not found")
+	}
+
+	return nil
 }
 
 func (r *pekurbanHewanRepository) Delete(ctx context.Context, pekurbanID, hewanID uuid.UUID) error {

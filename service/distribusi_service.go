@@ -16,6 +16,8 @@ type DistribusiDagingService interface {
 	GetAll(ctx context.Context) ([]dto.DistribusiResponse, error)
 	GetByID(ctx context.Context, id uuid.UUID) (*dto.DistribusiResponse, error)
 	Delete(ctx context.Context, id uuid.UUID) error
+	GetTotalDistribusiPaket(ctx context.Context) (int, error)
+	GetPenerimaBelumTerdistribusi(ctx context.Context) ([]dto.PenerimaResponse, error)
 }
 
 type distribusiDagingService struct {
@@ -108,6 +110,31 @@ func (s *distribusiDagingService) GetByID(ctx context.Context, id uuid.UUID) (*d
 	res := dto.ToDistribusiResponse(d)
 	return &res, nil
 }
+
+func (s *distribusiDagingService) GetTotalDistribusiPaket(ctx context.Context) (int, error) {
+	return s.repo.CountTotalPaket(ctx)
+}
+
+func (s *distribusiDagingService) GetPenerimaBelumTerdistribusi(ctx context.Context) ([]dto.PenerimaResponse, error) {
+	list, err := s.penerimaRepo.GetAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var result []dto.PenerimaResponse
+	for _, penerima := range list {
+		exist, err := s.repo.FindByPenerimaID(ctx, penerima.ID)
+		if err != nil {
+			return nil, err
+		}
+		if exist == nil {
+			result = append(result, dto.ToPenerimaResponse(penerima))
+		}
+	}
+
+	return result, nil
+}
+
 
 func (s *distribusiDagingService) Delete(ctx context.Context, id uuid.UUID) error {
 	return s.repo.Delete(ctx, id)

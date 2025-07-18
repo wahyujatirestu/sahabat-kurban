@@ -11,11 +11,12 @@ type CreatePekurbanRequest struct {
 }
 
 type UpdatePekurbanRequest struct {
-	Name   string `json:"name" binding:"required"`
-	Phone  string `json:"phone" binding:"required"`
-	Email  string `json:"email" binding:"required,email"`
-	Alamat string `json:"alamat" binding:"required"`
+	Name   *string `json:"name"`
+	Phone  *string `json:"phone"`
+	Email  *string `json:"email"`
+	Alamat *string `json:"alamat"`
 }
+
 
 type PekurbanResponse struct {
 	ID     string  `json:"id"`

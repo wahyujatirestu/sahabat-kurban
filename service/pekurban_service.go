@@ -15,7 +15,8 @@ type PekurbanService interface {
 	Create(ctx context.Context, req dto.CreatePekurbanRequest) (*dto.PekurbanResponse, error)
 	GetAll(ctx context.Context) ([]dto.PekurbanResponse, error)
 	GetById(ctx context.Context, id uuid.UUID)(*dto.PekurbanResponse, error)
-	GetByUserId(ctx context.Context, userID uuid.UUID)(*dto.PekurbanResponse, error)	
+	GetByUserId(ctx context.Context, userID uuid.UUID)(*dto.PekurbanResponse, error)
+	GetMe(ctx context.Context, userID uuid.UUID) (*dto.PekurbanResponse, error)
 	Update(ctx context.Context, id uuid.UUID, req dto.UpdatePekurbanRequest) error
 	Delete(ctx context.Context, id uuid.UUID) error
 }
@@ -108,16 +109,34 @@ func (s *pekurbanService) GetByUserId(ctx context.Context, userID uuid.UUID)(*dt
 	return &res, nil
 }
 
+func (s *pekurbanService) GetMe(ctx context.Context, userID uuid.UUID) (*dto.PekurbanResponse, error) {
+	p, err := s.pRepo.FindByUserId(ctx, userID)
+	if err != nil || p == nil {
+		return nil, err
+	}
+	res := dto.ToPekurbanRespon(p)
+	return &res, nil
+}
+
+
 func (s *pekurbanService) Update(ctx context.Context, id uuid.UUID, req dto.UpdatePekurbanRequest) error {
 	p, err := s.pRepo.FindById(ctx, id)
 	if err != nil || p == nil {
 		return err
 	}
 
-	p.Name = &req.Name
-	p.Phone = &req.Phone
-	p.Email = &req.Email
-	p.Alamat = &req.Alamat
+	if req.Name != nil {
+		p.Name = req.Name
+	}
+	if req.Phone != nil {
+		p.Phone = req.Phone
+	}
+	if req.Email != nil {
+		p.Email = req.Email
+	}
+	if req.Alamat != nil {
+		p.Alamat = req.Alamat
+	}
 
 	return s.pRepo.Update(ctx, p)
 }

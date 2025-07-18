@@ -10,11 +10,7 @@ import (
 type CreatePaymentRequest struct {
 	PekurbanID    uuid.UUID `json:"pekurban_id" binding:"required"`
 	Metode        string    `json:"metode" binding:"required"`         
-	Bank          string    `json:"bank,omitempty"`                   
-	Jumlah        float64   `json:"jumlah" binding:"required,gt=0"`
-	CustomerName  string    `json:"customer_name" binding:"required"`
-	CustomerEmail string    `json:"customer_email" binding:"required,email"`
-	CustomerPhone string    `json:"customer_phone" binding:"required"`
+	Bank          string    `json:"bank,omitempty"`
 }
 
 
@@ -34,7 +30,7 @@ type PaymentResponse struct {
 	Jumlah          float64  `json:"jumlah"`
 }
 
-func ToPaymentResponse(p *model.PembayaranKurban, mid *payment.MidtransChargeResponse) PaymentResponse {
+func ToPaymentResponse(p *model.PembayaranKurban, jumlah float64, mid *payment.MidtransChargeResponse) PaymentResponse {
 	var trxTime *string
 	if p.TransactionTime != nil {
 		str := p.TransactionTime.Format("2006-01-02 15:04:05")
@@ -59,21 +55,21 @@ func ToPaymentResponse(p *model.PembayaranKurban, mid *payment.MidtransChargeRes
 		ApprovalCode:    p.ApprovalCode,
 		TransactionTime: trxTime,
 		RedirectURL:     redirectURL,
-		Jumlah:          p.Jumlah,
+		Jumlah:          jumlah,
 	}
 }
 
-func ToMidtransChargeRequest(orderID string, req CreatePaymentRequest) *payment.MidtransChargeRequest {
+func ToMidtransChargeRequest(orderID string, grossAmount float64, name, email, phone string, req CreatePaymentRequest) *payment.MidtransChargeRequest {
 	payload := &payment.MidtransChargeRequest{
 		PaymentType: req.Metode,
 		TransactionDetails: payment.TransactionDetails{
 			OrderID:     orderID,
-			GrossAmount: req.Jumlah,
+			GrossAmount: grossAmount,
 		},
 		CustomerDetails: payment.CustomerDetails{
-			FirstName: req.CustomerName,
-			Email:     req.CustomerEmail,
-			Phone:     req.CustomerPhone,
+			FirstName: name,
+			Email:     email,
+			Phone:     phone,
 		},
 	}
 

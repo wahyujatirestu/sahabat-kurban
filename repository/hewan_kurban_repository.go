@@ -26,12 +26,12 @@ func NewHewanKurbanRepository(db *sql.DB) HewanKurbanRepository {
 }
 
 func (r *hewanKurbanRepository) Create(ctx context.Context, h *model.HewanKurban) error {
-	_, err := r.db.ExecContext(ctx, `INSERT INTO hewan_kurban (id, jenis, berat, tanggal_pendaftaran, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`, h.ID, h.Jenis, h.Berat, h.TglPendaftaran, h.Created_At, h.Updated_At)
+	_, err := r.db.ExecContext(ctx, `INSERT INTO hewan_kurban (id, jenis, berat, harga, is_private, tanggal_pendaftaran, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, h.ID, h.Jenis, h.Berat, h.Harga, h.IsPrivate, h.TanggalPendaftaran, h.Created_At, h.Updated_At)
 	return  err
 }
 
 func (r *hewanKurbanRepository) GetAll(ctx context.Context) ([]*model.HewanKurban, error) {
-	rows, err := r.db.QueryContext(ctx, `SELECT id, jenis, berat, tanggal_pendaftaran, created_at, updated_at FROM hewan_kurban`)
+	rows, err := r.db.QueryContext(ctx, `SELECT id, jenis, berat, harga, is_private, tanggal_pendaftaran, created_at, updated_at FROM hewan_kurban`)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (r *hewanKurbanRepository) GetAll(ctx context.Context) ([]*model.HewanKurba
 	var result []*model.HewanKurban
 	for rows.Next() {
 		var r model.HewanKurban
-		err := rows.Scan(&r.ID, &r.Jenis, &r.Berat, &r.TglPendaftaran, &r.Created_At, &r.Updated_At)
+		err := rows.Scan(&r.ID, &r.Jenis, &r.Berat, &r.Harga, &r.IsPrivate, &r.TanggalPendaftaran, &r.Created_At, &r.Updated_At)
 		if err != nil {
 			return nil, err
 		}
@@ -53,10 +53,10 @@ func (r *hewanKurbanRepository) GetAll(ctx context.Context) ([]*model.HewanKurba
 }
 
 func (r *hewanKurbanRepository) GetById(ctx context.Context, id uuid.UUID) (*model.HewanKurban, error) {
-	row := r.db.QueryRowContext(ctx, `SELECT id, jenis, berat, tanggal_pendaftaran, created_at, updated_at FROM hewan_kurban WHERE id=$1`, id)
+	row := r.db.QueryRowContext(ctx, `SELECT id, jenis, berat, harga, is_private, tanggal_pendaftaran, created_at, updated_at FROM hewan_kurban WHERE id=$1`, id)
 
 	var h model.HewanKurban
-	err := row.Scan(&h.ID, &h.Jenis, &h.Berat, &h.TglPendaftaran, &h.Created_At, &h.Updated_At)
+	err := row.Scan(&h.ID, &h.Jenis, &h.Berat, &h.Harga, &h.IsPrivate, &h.TanggalPendaftaran, &h.Created_At, &h.Updated_At)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -69,7 +69,7 @@ func (r *hewanKurbanRepository) GetById(ctx context.Context, id uuid.UUID) (*mod
 }
 
 func (r *hewanKurbanRepository) Update(ctx context.Context, h *model.HewanKurban) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE hewan_kurban SET jenis=$2, berat=$3, tanggal_pendaftaran=$4 WHERE id=$1`, h.ID, h.Jenis, h.Berat, h.TglPendaftaran)
+	_, err := r.db.ExecContext(ctx, `UPDATE hewan_kurban SET jenis=$2, berat=$3, harga=$4, is_private=$5, tanggal_pendaftaran=$6 WHERE id=$1`, h.ID, h.Jenis, h.Berat, h.Harga, h.IsPrivate, h.TanggalPendaftaran)
 	return err
 }
 

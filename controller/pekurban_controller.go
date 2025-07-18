@@ -90,6 +90,25 @@ func (c *PekurbanController) GetById(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{"data": data})
 }
 
+func (c *PekurbanController) GetMe(ctx *gin.Context) {
+	userRaw, exists := ctx.Get("user")
+	if !exists {
+		ctx.JSON(401, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	currentUser := userRaw.(model.User)
+
+	result, err := c.pService.GetByUserId(ctx.Request.Context(), currentUser.ID)
+	if err != nil || result == nil {
+		ctx.JSON(404, gin.H{"error": "Data pekurban tidak ditemukan"})
+		return
+	}
+
+	ctx.JSON(200, gin.H{"data": result})
+}
+
+
 func (c *PekurbanController) Update(ctx *gin.Context) {
 	userRaw, exist := ctx.Get("user")
 	if !exist {

@@ -10,6 +10,7 @@ func PekurbanRoute(rg *gin.RouterGroup, c *controller.PekurbanController, auth m
 	p := rg.Group("/pekurban")
 	{
 		p.GET("/", auth.RequireToken("admin", "panitia"), c.GetAll)
+		p.GET("/me", auth.RequireToken(), c.GetMe)
 		p.GET("/:id", auth.RequireToken("admin", "panitia"), c.GetById)
 		p.POST("/", auth.RequireToken(), c.Create)
 		p.PUT("/:id", auth.RequireToken(), c.Update)

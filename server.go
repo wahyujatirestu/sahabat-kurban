@@ -27,8 +27,11 @@ type Server struct {
 	penerimaRepo			repository.PenerimaDagingRepository
 	distribusiRepo			repository.DistribusiDagingRepository
 	pembayaranRepo			repository.PembayaranKurbanRepository
+	emailRepo				utilsrepo.EmailVerificationRepository
+	resetRepo 				utilsrepo.ResetPasswordRepository
 	userService 			service.UserService
 	authService 			service.AuthService
+	emailService			utilsservice.EmailService
 	jwtService				utilsservice.JWTService
 	pekurbanService 		service.PekurbanService
 	hewanKurbanService 		service.HewanKurbanService
@@ -59,6 +62,8 @@ func NewServer() *Server {
 
 	userRepo := repository.NewUserRepository(db)
 	rtRepo := utilsrepo.NewRefreshTokenRepository(db)
+	emailRepo := utilsrepo.NewEmailVerificationRepository(db)
+	resetRepo := utilsrepo.NewResetPasswordRepository(db)
 	pekurbanRepo := repository.NewPekurbanRepository(db)
 	hewanKurbanRepo := repository.NewHewanKurbanRepository(db)
 	pekurbanHewanRepo := repository.NewPekurbanHewanRepository(db)
@@ -66,17 +71,25 @@ func NewServer() *Server {
 	penerimaRepo := repository.NewPenerimaDagingRepository(db)
 	distribusiRepo := repository.NewDistribusiDagingRepository(db)
 	pembayaranRepo := repository.NewPembayaranKurbanRepository(db)
+
+	emailService := utilsservice.NewEmailService(
+		cfg.SendgridAPIKey,
+		cfg.EmailSender,
+		cfg.EmailSenderName,
+		cfg.AppBaseURL,
+	)
+
 	jwtService := utilsservice.NewJWTServie(cfg, rtRepo, userRepo)
-	authService := service.NewAuthService(cfg, userRepo, rtRepo, jwtService)
+	authService := service.NewAuthService(cfg, userRepo, rtRepo, emailRepo, resetRepo, jwtService, emailService)
 	userService := service.NewUserService(userRepo)
 	pekurbanService := service.NewPekurbanService(pekurbanRepo, userRepo)
-	hewanKurbanService := service.NewHewanKurbanService(hewanKurbanRepo)
-	pekurbanHewanService := service.NewPekurbanHewanService(pekurbanHewanRepo)
+	hewanKurbanService := service.NewHewanKurbanService(hewanKurbanRepo, penyembelihanRepo)
+	pekurbanHewanService := service.NewPekurbanHewanService(pekurbanHewanRepo, hewanKurbanRepo)
 	penyembelihanService := service.NewPenyembelihanService(penyembelihanRepo)
 	penerimaService := service.NewPenerimaDagingService(penerimaRepo, pekurbanRepo)
 	distribusiService := service.NewDistribusiDagingService(distribusiRepo, penerimaRepo, hewanKurbanRepo)
 	midtransService := payserv.NewMidtransService()
-	pembayaranService := service.NewPembayaranKurbanService(pembayaranRepo, midtransService)
+	pembayaranService := service.NewPembayaranKurbanService(pembayaranRepo, midtransService, pekurbanHewanRepo, hewanKurbanRepo, pekurbanRepo)
 
 	engine := gin.Default()
 	host := fmt.Sprintf(":%s", cfg.ApiPort)
@@ -86,6 +99,7 @@ func NewServer() *Server {
 	return &Server{
 		userRepo: userRepo,
 		rtRepo: rtRepo,
+		resetRepo: resetRepo,
 		pekurbanRepo: pekurbanRepo,
 		hewanKurbanRepo: hewanKurbanRepo,
 		pekurbanHewanRepo: pekurbanHewanRepo,
@@ -93,9 +107,11 @@ func NewServer() *Server {
 		penerimaRepo: penerimaRepo,
 		distribusiRepo: distribusiRepo,
 		pembayaranRepo: pembayaranRepo,
+		emailRepo: emailRepo,
 		db: db,
 		authService: authService,
 		userService: userService,
+		emailService: emailService,
 		jwtService: jwtService,
 		pekurbanService: pekurbanService,
 		hewanKurbanService: hewanKurbanService,

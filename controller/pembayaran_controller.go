@@ -113,3 +113,21 @@ func (c *PembayaranController) GetByOrderID(ctx *gin.Context) {
 	}
 	ctx.JSON(200, gin.H{"data": res})
 }
+
+func (c *PembayaranController) GetRekapDanaPerHewan(ctx *gin.Context) {
+	res, err := c.service.GetRekapDanaPerHewan(ctx.Request.Context())
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(200, gin.H{"data": res})
+}
+
+func (c *PembayaranController) GetProgressPembayaran(ctx *gin.Context) {
+	res, err := c.service.GetProgressPembayaran(ctx.Request.Context())
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(200, gin.H{"data": res})
+}

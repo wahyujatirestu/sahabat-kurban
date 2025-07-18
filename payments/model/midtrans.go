@@ -25,6 +25,11 @@ type BankTransfer struct {
 
 type QRIS struct{} 
 
+type Action struct {
+	Name string `json:"name"`
+	URL  string `json:"url"`
+}
+
 type MidtransChargeResponse struct {
 	StatusCode        string  	 `json:"status_code"`
 	StatusMessage     string  	 `json:"status_message"`
@@ -37,6 +42,7 @@ type MidtransChargeResponse struct {
 	FraudStatus       *string    `json:"fraud_status,omitempty"`
 	ApprovalCode      *string 	 `json:"approval_code,omitempty"`
 	VANumbers 		  []VANumber `json:"va_numbers,omitempty"`
+	Actions           []Action    `json:"actions"`
 	QRUrl 			  *string 	 `json:"qr_code_url,omitempty"`
 }
 

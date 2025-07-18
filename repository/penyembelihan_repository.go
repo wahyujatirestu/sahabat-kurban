@@ -13,6 +13,7 @@ type PenyembelihanRepository interface {
 	Create(ctx context.Context, p *model.Penyembelihan) error
 	GetAll(ctx context.Context) ([]*model.Penyembelihan, error)
 	GetById(ctx context.Context, id uuid.UUID) (*model.Penyembelihan, error)
+	GetByHewanID(ctx context.Context, hewanID uuid.UUID) (*model.Penyembelihan, error)
 	Update(ctx context.Context, p *model.Penyembelihan) error
 	Delete(ctx context.Context, id uuid.UUID) error
 }
@@ -54,6 +55,16 @@ func (r *penyembelihanRepository) GetAll(ctx context.Context) ([]*model.Penyembe
 	}
 
 	return result, nil
+}
+
+func (r *penyembelihanRepository) GetByHewanID(ctx context.Context, hewanID uuid.UUID) (*model.Penyembelihan, error) {
+	row := r.db.QueryRowContext(ctx, `SELECT id, hewan_id, tanggal_penyembelihan, lokasi, urutan_rencana, urutan_aktual, created_at, updated_at FROM penyembelihan WHERE hewan_id = $1 LIMIT 1`, hewanID)
+
+	var p model.Penyembelihan
+	if err := row.Scan(&p.ID, &p.HewanID, &p.TglPenyembelihan, &p.Lokasi, &p.UrutanRencana, &p.UrutanAktual, &p.Created_At, &p.Updated_At);err != nil {
+		return nil, err
+	}
+	return &p, nil
 }
 
 func (r *penyembelihanRepository) GetById(ctx context.Context, id uuid.UUID) (*model.Penyembelihan, error) {

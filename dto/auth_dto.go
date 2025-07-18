@@ -5,6 +5,7 @@ type RegisterUserRequest struct {
 	Name			string		`json:"name" binding:"required"`
 	Email			string		`json:"email" binding:"required,email"`
 	Password		string		`json:"password" binding:"required,min=8"`
+	ConfirmPassword string 		`json:"confirm_password" binding:"required,eqfield=Password"`
 }
 
 type RegisterRequest struct {
@@ -40,4 +41,18 @@ type TokenOnlyResponse struct {
 
 type UpdateRoleRequest struct {
 	Role string `json:"role" binding:"required,oneof=admin panitia user"`
+}
+
+type ResendVerificationRequest struct {
+	Email string `json:"email" binding:"required,email"`
+}
+
+type ForgotPasswordRequest struct {
+	Email string `json:"email" binding:"required,email"`
+}
+
+type ResetPasswordRequest struct {
+	Token       	string  `json:"token" binding:"required"`
+	NewPassword 	string  `json:"new_password" binding:"required,min=8"`
+	ConfirmPassword string 	`json:"confirm_password" binding:"required,eqfield=NewPassword"`
 }

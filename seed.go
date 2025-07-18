@@ -33,6 +33,7 @@ func seedInitialAdmin(userRepo repository.UserRepository) {
 		Email:     adminEmail,
 		Password:  password,
 		Role:      "admin",
+		IsVerified: true,
 		Created_At: time.Now(),
 		Updated_At: time.Now(),
 	}

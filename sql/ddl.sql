@@ -26,6 +26,7 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'panitia', 'user')),
+    is_verified BOOLEAN DEFAULT FALSE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
@@ -33,6 +34,25 @@ CREATE TABLE users (
 CREATE TRIGGER trigger_update_users
 BEFORE UPDATE ON users
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Tabel verifikasi email
+CREATE TABLE email_verification_tokens (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    token TEXT NOT NULL UNIQUE,
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Tabel reset password
+CREATE TABLE reset_password_tokens (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token TEXT NOT NULL UNIQUE,
+    expires_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL
+);
 
 -- Tabel pekurban (boleh terkait user atau tidak)
 CREATE TABLE pekurban (
@@ -64,9 +84,17 @@ CREATE TABLE hewan_kurban (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     jenis jenis_hewan_enum NOT NULL,
     berat NUMERIC(5,2) NOT NULL,
+    harga NUMERIC(12,2) NOT NULL,
+    is_private BOOLEAN DEFAULT FALSE,
     tanggal_pendaftaran DATE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    CONSTRAINT hewan_kurban_harga_check
+        CHECK (
+            (is_private = true AND harga = 0)
+            OR
+            (is_private = false AND harga > 0)
+        )
 );
 
 CREATE TRIGGER trigger_update_hewan_kurban
@@ -143,12 +171,12 @@ CREATE TABLE pembayaran_kurban (
     metode VARCHAR(50) NOT NULL,
     payment_type VARCHAR(50),
     va_number VARCHAR(50),
-    jumlah NUMERIC(12,2) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'settlement', 'failed', 'expired', 'deny')),
     fraud_status VARCHAR(20),
     approval_code VARCHAR(50),
     transaction_time TIMESTAMP WITH TIME ZONE,
     tanggal_pembayaran TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    jumlah NUMERIC(12,2) NOT NULL CHECK (jumlah > 0),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     FOREIGN KEY (pekurban_id) REFERENCES pekurban(id) ON DELETE CASCADE

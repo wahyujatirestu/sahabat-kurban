@@ -13,6 +13,7 @@ type User struct {
 	Email 		string 		`db:"email"`
 	Password 	string 		`db:"password"`
 	Role 		string 		`db:"role"`
+	IsVerified 	bool 		`db:"is_verified"`
 	Created_At 	time.Time 	`db:"created_at"`
 	Updated_At 	time.Time 	`db:"updated_at"`
 }

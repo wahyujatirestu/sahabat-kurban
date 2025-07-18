@@ -10,8 +10,10 @@ func PembayaranRoute(rg *gin.RouterGroup, c *controller.PembayaranController, au
 	p := rg.Group("/pembayaran")
 	{
 		p.POST("/", auth.RequireToken(), c.Create)
-		p.GET("/", auth.RequireToken("admin"), c.GetAll)
-		p.GET("/:id", auth.RequireToken("admin"), c.GetByID)
-		p.GET("/order/:order_id", auth.RequireToken("admin"), c.GetByOrderID)
+		p.GET("/", auth.RequireToken("admin", "panitia"), c.GetAll)
+		p.GET("/:id", auth.RequireToken("admin", "panitia"), c.GetByID)
+		p.GET("/order/:order_id", auth.RequireToken("admin", "panitia"), c.GetByOrderID)
+		p.GET("/rekap/hewan", auth.RequireToken("admin", "panitia"), c.GetRekapDanaPerHewan)
+		p.GET("/rekap/pekurban", auth.RequireToken("admin", "panitia"), c.GetProgressPembayaran)
 	}
 }

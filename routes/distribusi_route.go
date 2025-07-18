@@ -13,5 +13,7 @@ func DistribusiDagingRoute(rg *gin.RouterGroup, c *controller.DistribusiDagingCo
 		r.GET("/", auth.RequireToken("admin", "panitia"), c.GetAll)
 		r.GET("/:id", auth.RequireToken("admin", "panitia"), c.GetByID)
 		r.DELETE("/:id", auth.RequireToken("admin"), c.Delete)
+		r.GET("/total-paket", auth.RequireToken("admin", "panitia"), c.GetTotalPaket)
+		r.GET("/belum-terdistribusi", auth.RequireToken("admin", "panitia"), c.GetPenerimaBelumDistribusi)
 	}
 }

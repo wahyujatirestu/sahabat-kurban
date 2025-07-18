@@ -29,10 +29,20 @@ type TokenConfig struct {
 	AccessTokenLifetime	time.Duration
 }
 
+type EmailConfig struct {
+	SendgridAPIKey string
+	EmailSender    string
+	EmailSenderName string
+	AppBaseURL     string
+}
+
+
+
 type Config struct {
 	DBConfig
 	ApiConfig
 	TokenConfig
+	EmailConfig
 }
 
 func (c *Config) ReadConfig() error {
@@ -49,6 +59,17 @@ func (c *Config) ReadConfig() error {
 
 	c.ApiConfig = ApiConfig{
 		ApiPort: 	os.Getenv("API_PORT"),
+	}
+
+	c.EmailConfig = EmailConfig{
+		SendgridAPIKey: os.Getenv("SENDGRID_API_KEY"),
+		EmailSender:    os.Getenv("EMAIL_SENDER"),
+		EmailSenderName: os.Getenv("EMAIL_SENDER_NAME"),
+		AppBaseURL:      os.Getenv("APP_BASE_URL"),
+	}
+
+	if c.SendgridAPIKey == "" || c.EmailSender == "" {
+		return errors.New("Email config is empty")
 	}
 
 	accessTokenLifetime := time.Duration(20) * time.Minute

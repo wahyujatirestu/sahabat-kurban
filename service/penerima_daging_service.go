@@ -16,7 +16,7 @@ type PenerimaDagingService interface {
 	Create(ctx context.Context, req dto.CreatePenerimaRequest) (*dto.PenerimaResponse, error)
 	GetAll(ctx context.Context) ([]dto.PenerimaResponse, error)
 	GetByID(ctx context.Context, id uuid.UUID) (*dto.PenerimaResponse, error)
-	Update(ctx context.Context, id uuid.UUID, req dto.UpdatePenerimaRequest) error
+	Update(ctx context.Context, id uuid.UUID, req dto.UpdatePenerimaRequest) (*dto.PenerimaResponse, error)
 	Delete(ctx context.Context, id uuid.UUID) error
 }
 
@@ -101,10 +101,10 @@ func (s *penerimaDagingService) GetByID(ctx context.Context, id uuid.UUID) (*dto
 	return &res, nil
 }
 
-func (s *penerimaDagingService) Update(ctx context.Context, id uuid.UUID, req dto.UpdatePenerimaRequest) error {
+func (s *penerimaDagingService) Update(ctx context.Context, id uuid.UUID, req dto.UpdatePenerimaRequest) (*dto.PenerimaResponse, error) {
 	existing, err := s.repo.GetByID(ctx, id)
 	if err != nil || existing == nil {
-		return err
+		return nil, err
 	}
 
 	if strings.TrimSpace(*req.Name) != "" {
@@ -125,7 +125,12 @@ func (s *penerimaDagingService) Update(ctx context.Context, id uuid.UUID, req dt
 		}
 	}
 
-	return s.repo.Update(ctx, existing)
+	if err = s.repo.Update(ctx, existing); err != nil {
+		return nil, err
+	}
+
+	res := dto.ToPenerimaResponse(existing)
+	return &res, nil
 }
 
 func (s *penerimaDagingService) Delete(ctx context.Context, id uuid.UUID) error {

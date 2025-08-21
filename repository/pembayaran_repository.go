@@ -16,6 +16,7 @@ type PembayaranKurbanRepository interface {
 	FindByOrderID(ctx context.Context, orderID string) (*model.PembayaranKurban, error)
 	GetAll(ctx context.Context) ([]*model.PembayaranKurban, error)
 	GetTotalPembayaranPerHewan(ctx context.Context) ([]model.TotalPembayaranPerHewan, error)
+	IsHewanLunas(ctx context.Context, hewanID uuid.UUID) (bool, error)
 	GetProgressPembayaranPekurban(ctx context.Context) ([]model.ProgressPembayaran, error)
 }
 
@@ -84,12 +85,13 @@ func (r *pembayaranRepo) GetTotalPembayaranPerHewan(ctx context.Context) ([]mode
 		h.id AS hewan_id,
 		h.jenis,
 		h.harga AS harga_target,
-		COALESCE(SUM(ph.porsi * h.harga), 0) AS total_masuk
+		COALESCE(SUM(ph.porsi * h.harga), 0) AS total_masuk,
+		h.is_private
 	FROM hewan_kurban h
 	LEFT JOIN pekurban_hewan ph ON h.id = ph.hewan_id
 	LEFT JOIN pembayaran_kurban pk ON ph.pekurban_id = pk.pekurban_id
 		AND pk.status IN ('settlement', 'capture')
-	GROUP BY h.id
+	GROUP BY h.id, h.is_private
 	ORDER BY h.tanggal_pendaftaran;
 	`
 
@@ -102,12 +104,33 @@ func (r *pembayaranRepo) GetTotalPembayaranPerHewan(ctx context.Context) ([]mode
 	var result []model.TotalPembayaranPerHewan
 	for rows.Next() {
 		var p model.TotalPembayaranPerHewan
-		if err := rows.Scan(&p.HewanID, &p.Jenis, &p.HargaTarget, &p.TotalMasuk); err != nil {
+		if err := rows.Scan(&p.HewanID, &p.Jenis, &p.HargaTarget, &p.TotalMasuk, &p.IsPrivate); err != nil {
 			return nil, err
 		}
 		result = append(result, p)
 	}
 	return result, nil
+}
+
+func (r *pembayaranRepo) IsHewanLunas(ctx context.Context, hewanID uuid.UUID) (bool, error) {
+	query := `
+	SELECT 
+		(h.is_private = true) OR 
+		(COALESCE(SUM(ph.porsi * h.harga), 0) >= h.harga) AS is_lunas
+	FROM hewan_kurban h
+	LEFT JOIN pekurban_hewan ph ON h.id = ph.hewan_id
+	LEFT JOIN pembayaran_kurban pk ON ph.pekurban_id = pk.pekurban_id
+		AND pk.status IN ('settlement', 'capture')
+	WHERE h.id = $1
+	GROUP BY h.id, h.is_private;
+	`
+
+	var isLunas bool
+	err := r.db.QueryRowContext(ctx, query, hewanID).Scan(&isLunas)
+	if err != nil {
+		return false, err
+	}
+	return isLunas, nil
 }
 
 func (r *pembayaranRepo) GetProgressPembayaranPekurban(ctx context.Context) ([]model.ProgressPembayaran, error) {

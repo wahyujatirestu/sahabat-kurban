@@ -16,16 +16,17 @@ type PenyembelihanService interface {
 	Create(ctx context.Context, req dto.CreatePenyembelihanRequest) (*dto.PenyembelihanResponse, error)
 	GetAll(ctx context.Context) ([]dto.PenyembelihanResponse, error)
 	GetById(ctx context.Context, id uuid.UUID) (*dto.PenyembelihanResponse, error)
-	Update(ctx context.Context, id uuid.UUID, req dto.UpdatePenyembelihanRequest) error
+	Update(ctx context.Context, id uuid.UUID, req dto.UpdatePenyembelihanRequest) (*dto.PenyembelihanResponse, error)
 	Delete(ctx context.Context, id uuid.UUID) error
 }
 
 type penyembelihanService struct {
-	repo repository.PenyembelihanRepository
+	repo  repository.PenyembelihanRepository
+	pRepo repository.PembayaranKurbanRepository
 }
 
-func NewPenyembelihanService(repo repository.PenyembelihanRepository) PenyembelihanService {
-	return &penyembelihanService{repo: repo}
+func NewPenyembelihanService(repo repository.PenyembelihanRepository, pRepo repository.PembayaranKurbanRepository) PenyembelihanService {
+	return &penyembelihanService{repo: repo, pRepo: pRepo}
 }
 
 func (s *penyembelihanService) Create(ctx context.Context, req dto.CreatePenyembelihanRequest) (*dto.PenyembelihanResponse, error) {
@@ -34,12 +35,20 @@ func (s *penyembelihanService) Create(ctx context.Context, req dto.CreatePenyemb
 		return nil, err
 	}
 
+	isLunas, err := s.pRepo.IsHewanLunas(ctx, hewanID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !isLunas {
+		return nil, errors.New("Hewan is not fully paid yet and cannot be slaughtered.")
+	}
+
 	if strings.TrimSpace(req.Lokasi) == "" {
 		return nil, errors.New("Lokasi is required")
 	}
-	
+
 	p := &model.Penyembelihan{
-		ID: uuid.New(),
 		HewanID: hewanID,
 		TglPenyembelihan: req.TanggalPenyembelihan,
 		Lokasi: req.Lokasi,
@@ -81,18 +90,25 @@ func (s *penyembelihanService) GetById(ctx context.Context, id uuid.UUID) (*dto.
 	return &res, nil
 }
 
-func (s *penyembelihanService) Update(ctx context.Context, id uuid.UUID, req dto.UpdatePenyembelihanRequest) error {
+func (s *penyembelihanService) Update(ctx context.Context, id uuid.UUID, req dto.UpdatePenyembelihanRequest) (*dto.PenyembelihanResponse, error) {
 	existing, err := s.repo.GetById(ctx, id)
 	if err != nil || existing == nil {
-		return err
+		return nil, err
 	}
 
 	existing.TglPenyembelihan = req.TanggalPenyembelihan
-	existing.Lokasi = req.Lokasi
+	if strings.TrimSpace(req.Lokasi) != "" {
+		existing.Lokasi = req.Lokasi
+	}
 	existing.UrutanRencana = req.UrutanRencana
 	existing.UrutanAktual = req.UrutanAktual
 
-	return s.repo.Update(ctx, existing)
+	if err = s.repo.Update(ctx, existing); err != nil {
+		return nil, err
+	}
+
+	res := dto.ToPenyembelihanResponse(existing)
+	return &res, nil
 }
 
 func (s *penyembelihanService) Delete(ctx context.Context, id uuid.UUID) error {

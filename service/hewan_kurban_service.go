@@ -15,7 +15,7 @@ type HewanKurbanService interface {
 	Create(ctx context.Context, req dto.CreateHewanKurbanRequest) (*dto.HewanKurbanResponse, error)
 	GetByID(ctx context.Context, id uuid.UUID) (*dto.HewanKurbanResponse, error)
 	GetAll(ctx context.Context) ([]dto.HewanKurbanResponse, error)
-	Update(ctx context.Context, id uuid.UUID, req dto.UpdateHewanKurbanRequest) error
+	Update(ctx context.Context, id uuid.UUID, req dto.UpdateHewanKurbanRequest) (*dto.HewanKurbanResponse, error)
 	Delete(ctx context.Context, id uuid.UUID) error
 }
 
@@ -103,14 +103,14 @@ func (s *hewanKurbanService) GetAll(ctx context.Context) ([]dto.HewanKurbanRespo
 	return result, nil
 }
 
-func (s *hewanKurbanService) Update(ctx context.Context, id uuid.UUID, req dto.UpdateHewanKurbanRequest) error {
+func (s *hewanKurbanService) Update(ctx context.Context, id uuid.UUID, req dto.UpdateHewanKurbanRequest) (*dto.HewanKurbanResponse, error) {
 	existing, err := s.repo.GetById(ctx, id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if existing == nil {
-		return errors.New("Hewan kurban not found")
+		return nil, errors.New("Hewan kurban not found")
 	}
 
 	if req.Jenis != "" {
@@ -129,12 +129,17 @@ func (s *hewanKurbanService) Update(ctx context.Context, id uuid.UUID, req dto.U
 	if req.TglPendaftaran != "" {
 		tgl, err := time.Parse("2006-01-02", req.TglPendaftaran)
 		if err != nil {
-			return errors.New("Invalid date format")
+			return nil, errors.New("Invalid date format")
 		}
 		existing.TanggalPendaftaran = tgl
 	}
 
-	return s.repo.Update(ctx, existing)
+	if err := s.repo.Update(ctx, existing); err != nil {
+		return nil, err
+	}
+
+	res := dto.ToHewanKurbanResponse(existing, false)
+	return &res, nil
 }
 
 func (s *hewanKurbanService) Delete(ctx context.Context, id uuid.UUID) error {

@@ -23,6 +23,7 @@ type UpdatePenyembelihanRequest struct {
 type PenyembelihanResponse struct {
 	ID                   string    `json:"id"`
 	HewanID              string    `json:"hewan_id"`
+	JenisHewan           string    `json:"jenis_hewan"`
 	TanggalPenyembelihan time.Time `json:"tanggal_penyembelihan"`
 	Lokasi               string    `json:"lokasi"`
 	UrutanRencana        int       `json:"urutan_rencana"`
@@ -34,6 +35,7 @@ func ToPenyembelihanResponse(p *model.Penyembelihan) PenyembelihanResponse {
 	return PenyembelihanResponse{
 		ID:                   p.ID.String(),
 		HewanID:              p.HewanID.String(),
+		JenisHewan:           string(p.JenisHewan),
 		TanggalPenyembelihan: p.TglPenyembelihan,
 		Lokasi:               p.Lokasi,
 		UrutanRencana:        p.UrutanRencana,

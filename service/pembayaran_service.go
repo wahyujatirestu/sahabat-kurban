@@ -157,19 +157,26 @@ func (s *pembayaranKurbanService) GetRekapDanaPerHewan(ctx context.Context) ([]d
 	var result []dto.RekapDanaHewanResponse
 	for _, h := range list {
 		status := "belum lunas"
-		if h.TotalMasuk >= h.HargaTarget {
-			if h.TotalMasuk > h.HargaTarget {
-				status = "melebihi target"
-			} else {
-				status = "lunas"
+
+		if h.IsPrivate {
+			status = "lunas"
+		} else {
+			if h.TotalMasuk >= h.HargaTarget {
+				if h.TotalMasuk > h.HargaTarget {
+					status = "melebihi target"
+				} else {
+					status = "lunas"
+				}
 			}
 		}
+
 		result = append(result, dto.RekapDanaHewanResponse{
 			HewanID:     h.HewanID,
 			Jenis:       h.Jenis,
 			HargaTarget: h.HargaTarget,
 			TotalMasuk:  h.TotalMasuk,
 			Status:      status,
+			IsPrivate:   h.IsPrivate,
 		})
 	}
 	return result, nil

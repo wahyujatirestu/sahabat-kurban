@@ -18,17 +18,22 @@ func NewPenyembelihanController(s service.PenyembelihanService) *PenyembelihanCo
 func (c *PenyembelihanController) Create(ctx *gin.Context) {
 	var req dto.CreatePenyembelihanRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": err.Error()})
 		return
 	} 
 
 	res, err := c.service.Create(ctx.Request.Context(), req)
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
 	ctx.JSON(201, gin.H{
+		"status": 201,
 		"data": res,
 		"message": "Penyembelihan created successfully",
 	})
@@ -37,63 +42,94 @@ func (c *PenyembelihanController) Create(ctx *gin.Context) {
 func (c *PenyembelihanController) GetAll(ctx *gin.Context) {
 	res, err := c.service.GetAll(ctx)
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"data": res})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": res,
+		"message": "Penyembelihan retrieved successfully",
+	})
 }
 
 func (c *PenyembelihanController) GetById(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid id"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Invalid id"})
 		return
 	}
 
 	res, err := c.service.GetById(ctx.Request.Context(), id)
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"data": res})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": res,
+		"message": "Penyembelihan retrieved successfully",
+	})
 }
 
 func (c *PenyembelihanController) Update(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid id"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Invalid id"})
 		return
 	}
 
 	var req dto.UpdatePenyembelihanRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": err.Error()})
 		return
 	}
 
-	if err := c.service.Update(ctx.Request.Context(), id, req); err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+	data, err := c.service.Update(ctx.Request.Context(), id, req)
+	if err != nil {
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"message": "Penyembelihan updated successfully"})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": data,
+		"message": "Penyembelihan updated successfully",
+	})
 }
 
 func (c *PenyembelihanController) Delete(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid ID"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Invalid ID"})
 	}
 
 	if err := c.service.Delete(ctx.Request.Context(), id); err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"message": "Penyembelihan deleted successfully"})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"message": "Penyembelihan deleted successfully"})
 }

@@ -9,6 +9,7 @@ import (
 type Penyembelihan struct {
 	ID 					uuid.UUID		`db:"id"`
 	HewanID				uuid.UUID		`db:"hewan_id"`
+	JenisHewan			JenisHewan		`db:"jenis_hewan"`
 	TglPenyembelihan 	time.Time		`db:"tanggal_penyembelihan"`
 	Lokasi				string			`db:"lokasi"`
 	UrutanRencana		int				`db:"urutan_rencana"`

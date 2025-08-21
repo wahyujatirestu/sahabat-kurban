@@ -16,9 +16,9 @@ import (
 type UserService interface {
 	GetAll(ctx context.Context) ([]dto.UserResponse, error)
 	GetById(ctx context.Context, id uuid.UUID) (*dto.UserResponse, error)
-	Update(ctx context.Context, id uuid.UUID, req dto.UpdateUserRequest) error
+	Update(ctx context.Context, id uuid.UUID, req dto.UpdateUserRequest) (*dto.UserResponse, error)
 	ChangePassword(ctx context.Context, userID uuid.UUID, req dto.ChangePasswordRequest) error
-	UpdateRole(ctx context.Context, userID uuid.UUID, role string) error
+	UpdateRole(ctx context.Context, userID uuid.UUID, role string) (*dto.UserResponse, error)
 	CreateWithRole(ctx context.Context, req dto.RegisterRequest) (*dto.UserResponse, error)
 	Delete(ctx context.Context, id uuid.UUID) error
 }
@@ -51,10 +51,10 @@ func (s *userService) GetById(ctx context.Context, id uuid.UUID) (*dto.UserRespo
 	return &res, nil
 }
 
-func (s *userService) Update(ctx context.Context, id uuid.UUID, req dto.UpdateUserRequest) error {
+func (s *userService) Update(ctx context.Context, id uuid.UUID, req dto.UpdateUserRequest) (*dto.UserResponse, error) {
 	users, err := s.userRepo.FindById(ctx, id)
 	if err != nil || users == nil {
-		return errors.New("User not found")
+		return nil, errors.New("User not found")
 	}
 	
 	if strings.TrimSpace(req.Username) != "" {
@@ -75,7 +75,12 @@ func (s *userService) Update(ctx context.Context, id uuid.UUID, req dto.UpdateUs
 		Role: "user",
 	}
 
-	return s.userRepo.Update(ctx, user)
+	if err = s.userRepo.Update(ctx, user); err != nil {
+		return nil, err
+	}
+
+	res := dto.ToUserResponse(user)
+	return &res, nil
 }
 
 func (s *userService) ChangePassword(ctx context.Context, userID uuid.UUID, req dto.ChangePasswordRequest) error {
@@ -100,17 +105,22 @@ func (s *userService) ChangePassword(ctx context.Context, userID uuid.UUID, req 
 	return s.userRepo.UpdatePassword(ctx, userID, newHashed)
 }
 
-func (s *userService) UpdateRole(ctx context.Context, userID uuid.UUID, role string) error {
+func (s *userService) UpdateRole(ctx context.Context, userID uuid.UUID, role string) (*dto.UserResponse, error) {
 	user, err := s.userRepo.FindById(ctx, userID)
 	if err != nil || user == nil {
-		return errors.New("User not found")
+		return nil, errors.New("User not found")
 	}
 
 	if strings.TrimSpace(role) != "" {
 		user.Role = role
 	}
 
-	return s.userRepo.Update(ctx, user)
+	if err = s.userRepo.Update(ctx, user); err != nil {
+		return nil, err
+	}
+
+	res := dto.ToUserResponse(user)
+	return &res, nil
 }
 
 func (s *userService) CreateWithRole(ctx context.Context, req dto.RegisterRequest) (*dto.UserResponse, error) {

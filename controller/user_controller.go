@@ -19,11 +19,17 @@ func NewUserController(userService service.UserService) *UserController {
 func (c *UserController) GetAll(ctx *gin.Context) {
 	users, err := c.userService.GetAll(ctx.Request.Context())
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, users)
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": users,
+		"message": "Users retrieved successfully",
+	})
 }
 
 func (c *UserController) GetById(ctx *gin.Context) {
@@ -31,23 +37,33 @@ func (c *UserController) GetById(ctx *gin.Context) {
 	id, err := uuid.Parse(idStr)
 
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid user ID"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Invalid user ID"})
 		return
 	}
 
 	user, err := c.userService.GetById(ctx.Request.Context(), id)
 	if err != nil || user == nil {
-		ctx.JSON(404, gin.H{"error": "User not found"})
+		ctx.JSON(404, gin.H{
+			"status": 404,
+			"error": "User not found"})
 		return
 	}
 
-	ctx.JSON(200, user)
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": user,
+		"message": "User retrieved successfully",
+	})
 }
 
 func (c *UserController) GetMyProfile(ctx *gin.Context) {
 	userRaw, exists := ctx.Get("user")
 	if !exists {
-		ctx.JSON(401, gin.H{"error": "unauthorized"})
+		ctx.JSON(401, gin.H{
+			"status": 401,
+			"error": "unauthorized"})
 		return
 	}
 
@@ -55,18 +71,26 @@ func (c *UserController) GetMyProfile(ctx *gin.Context) {
 
 	user, err := c.userService.GetById(ctx.Request.Context(), currentUser.ID)
 	if err != nil || user == nil {
-		ctx.JSON(404, gin.H{"error": "user not found"})
+		ctx.JSON(404, gin.H{
+			"status": 404,
+			"error": "user not found"})
 		return
 	}
 
-	ctx.JSON(200, user)
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": user,
+		"message": "User retrieved successfully",
+	})
 }
 
 
 func (c *UserController) Update(ctx *gin.Context) {
 	userRaw, exist := ctx.Get("user")
 	if !exist {
-		ctx.JSON(401, gin.H{"error": "Unauthorized"})
+		ctx.JSON(401, gin.H{
+			"status": 401,
+			"error": "Unauthorized"})
 		return
 	}
 
@@ -75,70 +99,100 @@ func (c *UserController) Update(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid user ID"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Invalid user ID"})
 		return
 	}
 
 	if currentUser.Role != "admin" && currentUser.ID != id {
-		ctx.JSON(403, gin.H{"error": "Forbidden"})
+		ctx.JSON(403, gin.H{
+			"status": 403,
+			"error": "Forbidden"})
 		return
 	}
 
 	var req dto.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": err.Error()})
 		return
 	}
 
-	if err := c.userService.Update(ctx.Request.Context(), id, req); err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+	data, err := c.userService.Update(ctx.Request.Context(), id, req)
+	if err != nil {
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"message": "User updated successfully"})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": data,
+		"message": "User updated successfully",
+	})
 }
 
 func (c *UserController) UpdateRole(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid user ID"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Invalid user ID"})
 		return
 	}
 
 	var req dto.UpdateRoleRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": err.Error()})
 		return
 	}
 
-	if err := c.userService.UpdateRole(ctx.Request.Context(), id, req.Role); err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+	data, err := c.userService.UpdateRole(ctx.Request.Context(), id, req.Role)
+	if err != nil {
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"message": "Role updated successfully"})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": data,
+		"message": "Role updated successfully"})
 }
 
 func (c *UserController) CreateAdmin(ctx *gin.Context) {
 	var req dto.RegisterRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": err.Error()})
 		return
 	}
 
 	if req.Role != "admin" {
-		ctx.JSON(400, gin.H{"error": "Only admin role is allowed here"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Only admin role is allowed here"})
 		return
 	}
 
 	res, err := c.userService.CreateWithRole(ctx.Request.Context(), req)
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": err.Error()})
 		return
 	}
 
 	ctx.JSON(201, gin.H{
+		"status": 201,
 		"data": res,
 		"massage": "Admin created successfully",
 	})
@@ -147,7 +201,9 @@ func (c *UserController) CreateAdmin(ctx *gin.Context) {
 func (c *UserController) ChangePassword(ctx *gin.Context) {
 	userRaw, exist := ctx.Get("user")
 	if !exist {
-		ctx.JSON(401, gin.H{"error": "Unauthorized"})
+		ctx.JSON(401, gin.H{
+			"status": 401,
+			"error": "Unauthorized"})
 		return
 	}
 
@@ -155,43 +211,59 @@ func (c *UserController) ChangePassword(ctx *gin.Context) {
 
 	paramID := ctx.Param("id")
 	if user.ID.String() != paramID {
-		ctx.JSON(403, gin.H{"error": "you can only change your own password"})
+		ctx.JSON(403, gin.H{
+			"status": 403,
+			"error": "you can only change your own password"})
 		return
 	}
 
 	var req dto.ChangePasswordRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": err.Error()})
 		return
 	}
 
 	uid, err := uuid.Parse(paramID)
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid user ID"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Invalid user ID"})
 		return
 	}
 
 	if err := c.userService.ChangePassword(ctx.Request.Context(), uid, req); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"message": "Password changed successfully"})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"message": "Password changed successfully"})
 }
 
 func (c *UserController) Delete(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid user ID"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Invalid user ID"})
 		return
 	}
 
 	if err := c.userService.Delete(ctx.Request.Context(), id); err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"message": "User deleted successfully"})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"message": "User deleted successfully"})
 }
 

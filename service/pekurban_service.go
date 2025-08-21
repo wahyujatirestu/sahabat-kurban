@@ -18,7 +18,7 @@ type PekurbanService interface {
 	GetById(ctx context.Context, id uuid.UUID)(*dto.PekurbanResponse, error)
 	GetByUserId(ctx context.Context, userID uuid.UUID)(*dto.PekurbanResponse, error)
 	GetMe(ctx context.Context, userID uuid.UUID) (*dto.PekurbanResponse, error)
-	Update(ctx context.Context, id uuid.UUID, req dto.UpdatePekurbanRequest) error
+	Update(ctx context.Context, id uuid.UUID, req dto.UpdatePekurbanRequest) (*dto.PekurbanResponse, error)
 	Delete(ctx context.Context, id uuid.UUID) error
 }
 
@@ -57,7 +57,7 @@ func (s *pekurbanService) Create(ctx context.Context, req dto.CreatePekurbanRequ
 	if strings.TrimSpace(req.Name) == "" {
 		return nil, errors.New("Name is required")
 	}
-	
+
 	p := &model.Pekurban{
 		ID: uuid.New(),
 		UserId: userID,
@@ -124,10 +124,10 @@ func (s *pekurbanService) GetMe(ctx context.Context, userID uuid.UUID) (*dto.Pek
 }
 
 
-func (s *pekurbanService) Update(ctx context.Context, id uuid.UUID, req dto.UpdatePekurbanRequest) error {
+func (s *pekurbanService) Update(ctx context.Context, id uuid.UUID, req dto.UpdatePekurbanRequest) (*dto.PekurbanResponse, error) {
 	p, err := s.pRepo.FindById(ctx, id)
 	if err != nil || p == nil {
-		return err
+		return nil, err
 	}
 
 	if strings.TrimSpace(*req.Name) != "" {
@@ -143,7 +143,12 @@ func (s *pekurbanService) Update(ctx context.Context, id uuid.UUID, req dto.Upda
 		p.Alamat = req.Alamat
 	}
 
-	return s.pRepo.Update(ctx, p)
+	if err = s.pRepo.Update(ctx, p); err != nil {
+		return nil, err
+	}
+
+	res := dto.ToPekurbanRespon(p)
+	return &res, nil
 }
 
 func (s *pekurbanService) Delete(ctx context.Context, id uuid.UUID) error {

@@ -8,6 +8,7 @@ type RekapDanaHewanResponse struct {
 	HargaTarget float64   `json:"harga_target"`
 	TotalMasuk  float64   `json:"total_masuk"`
 	Status      string    `json:"status"`
+	IsPrivate   bool      `json:"is_private"`
 }
 
 

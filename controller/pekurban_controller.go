@@ -19,7 +19,9 @@ func NewPekurbanController(pService service.PekurbanService) *PekurbanController
 func (c *PekurbanController) Create(ctx *gin.Context) {
 	userRaw, exist := ctx.Get("user")
 	if !exist {
-		ctx.JSON(401, gin.H{"error": "Unauthorized"})
+		ctx.JSON(401, gin.H{
+			"status": 401,
+			"error": "Unauthorized"})
 		return
 	}
 
@@ -27,18 +29,24 @@ func (c *PekurbanController) Create(ctx *gin.Context) {
 
 	var req dto.CreatePekurbanRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": err.Error()})
 		return
 	}
 
 	if currentUser.Role == "user" {
 		if req.UserID == nil {
-			ctx.JSON(403, gin.H{"error": "You must include your own user_id"})
+			ctx.JSON(403, gin.H{
+				"status": 403,
+				"error": "You must include your own user_id"})
 			return
 		}
 		uid, err := uuid.Parse(*req.UserID)
 		if err != nil || uid != currentUser.ID {
-			ctx.JSON(403, gin.H{"error": "You can only register yourself as pekurban"})
+			ctx.JSON(403, gin.H{
+				"status": 403,
+				"error": "You can only register yourself as pekurban"})
 			return
 		}
 	}
@@ -47,18 +55,23 @@ func (c *PekurbanController) Create(ctx *gin.Context) {
 	if currentUser.Role == "user" {
 		existing, _ := c.pService.GetByUserId(ctx.Request.Context(), currentUser.ID)
 		if existing != nil {
-			ctx.JSON(409, gin.H{"error": "You have already registered as pekurban"})
+			ctx.JSON(409, gin.H{
+				"status": 409,
+				"error": "You have already registered as pekurban"})
 			return
 		}
 	}
 
 	res, err := c.pService.Create(ctx.Request.Context(), req)
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
 	ctx.JSON(201, gin.H{
+		"status": 201,
 		"data": res,
 		"message": "Pekurban created successfully",
 	})
@@ -67,33 +80,49 @@ func (c *PekurbanController) Create(ctx *gin.Context) {
 func (c *PekurbanController) GetAll(ctx *gin.Context) {
 	data, err := c.pService.GetAll(ctx.Request.Context())
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"data": data})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": data,
+		"message": "Pekurban retrieved successfully",
+	})
 }
 
 func (c *PekurbanController) GetById(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid ID"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Invalid ID"})
 		return
 	}
 
 	data, err := c.pService.GetById(ctx.Request.Context(), id)
 	if err != nil || data == nil {
-		ctx.JSON(404, gin.H{"error": "Pekurban not found"})
+		ctx.JSON(404, gin.H{
+			"status": 404,
+			"error": "Pekurban not found"})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"data": data})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": data,
+		"message": "Pekurban retrieved successfully",
+	})
 }
 
 func (c *PekurbanController) GetMe(ctx *gin.Context) {
 	userRaw, exists := ctx.Get("user")
 	if !exists {
-		ctx.JSON(401, gin.H{"error": "Unauthorized"})
+		ctx.JSON(401, gin.H{
+			"status": 401,
+			"error": "Unauthorized"})
 		return
 	}
 
@@ -101,18 +130,26 @@ func (c *PekurbanController) GetMe(ctx *gin.Context) {
 
 	result, err := c.pService.GetByUserId(ctx.Request.Context(), currentUser.ID)
 	if err != nil || result == nil {
-		ctx.JSON(404, gin.H{"error": "Data pekurban tidak ditemukan"})
+		ctx.JSON(404, gin.H{
+			"status": 404,
+			"error": "Data pekurban tidak ditemukan"})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"data": result})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": result,
+		"message": "Pekurban retrieved successfully",
+	})
 }
 
 
 func (c *PekurbanController) Update(ctx *gin.Context) {
 	userRaw, exist := ctx.Get("user")
 	if !exist {
-		ctx.JSON(401, gin.H{"error": "Unauthorized"})
+		ctx.JSON(401, gin.H{
+			"status": 401,
+			"error": "Unauthorized"})
 		return
 	}
 
@@ -120,54 +157,77 @@ func (c *PekurbanController) Update(ctx *gin.Context) {
 
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid ID"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Invalid ID"})
 	}
 
 	p, err := c.pService.GetById(ctx.Request.Context(), id)
 	if err != nil || p == nil {
-		ctx.JSON(404, gin.H{"error": "Pekurban not found"})
+		ctx.JSON(404, gin.H{
+			"status": 404,
+			"error": "Pekurban not found"})
 		return
 	}
 
 	if currentUser.Role != "admin" {
 		if currentUser.Role == "user" {
 			if p.UserID == nil || *p.UserID != currentUser.ID.String() {
-				ctx.JSON(403, gin.H{"error": "You can only update your own kurban data"})
+				ctx.JSON(403, gin.H{
+					"status": 403,
+					"error": "You can only update your own kurban data"})
 				return
 			}
 		}
 		if currentUser.Role == "panitia" {
 			if !(p.UserID == nil || *p.UserID == currentUser.ID.String()) {
-				ctx.JSON(403, gin.H{"error": "Panitia can only update offline data or their own"})
+				ctx.JSON(403, gin.H{
+					"status": 403,
+					"error": "Panitia can only update offline data or their own"})
 			}
 		}
 	}
 
 	var req dto.UpdatePekurbanRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": err.Error()})
 		return
 	}
 
-	if err := c.pService.Update(ctx.Request.Context(), id, req); err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+	data, err := c.pService.Update(ctx.Request.Context(), id, req)
+	if err != nil {
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"message": "Pekurban updated successfully"})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"data": data,
+		"message": "Pekurban updated successfully",
+	})
 }
 
 func (c *PekurbanController) Delete(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": "Invalid ID"})
+		ctx.JSON(400, gin.H{
+			"status": 400,
+			"error": "Invalid ID"})
 		return
 	}
 
 	if err := c.pService.Delete(ctx.Request.Context(), id); err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		ctx.JSON(500, gin.H{
+			"status": 500,
+			"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"message": "Pekurban deleted successfully"})
+	ctx.JSON(200, gin.H{
+		"status": 200,
+		"message": "Pekurban deleted successfully"})
 }

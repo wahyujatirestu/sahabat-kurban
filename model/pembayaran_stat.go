@@ -7,6 +7,7 @@ type TotalPembayaranPerHewan struct {
 	Jenis       string
 	HargaTarget float64
 	TotalMasuk  float64
+	IsPrivate   bool
 }
 
 type ProgressPembayaran struct {

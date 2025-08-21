@@ -54,7 +54,7 @@ POST http://localhost:8080/api/v1/auth/refresh
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU"
+    "refreshToken": "<refresh-token>"
 }
 
 ### Logout
@@ -62,12 +62,12 @@ POST http://localhost:8080/api/v1/auth/logout
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NjM3MzM5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.PjS7nVLNjBVdNKDbcYRIRS327KVAjx0OanyMkjfBmk0"
+    "refreshToken": "<refresh-token>"
 }
 
 ### Create/Register new admin (admin only)
 POST http://localhost:8080/api/v1/users/register
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NjM3MzM5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.PjS7nVLNjBVdNKDbcYRIRS327KVAjx0OanyMkjfBmk0
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -80,7 +80,7 @@ Content-Type: application/json
 
 ### Promote User to Committee (admin only)
 PATCH http://localhost:8080/api/v1/users/b9801e15-254a-4d79-a506-9fe75391b3c9/role
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -94,19 +94,19 @@ Content-Type: application/json
 
 ### Get All User (admin only)
 GET http://localhost:8080/api/v1/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get User By ID (admin only)
 GET http://localhost:8080/api/v1/users/{{ user_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get Own Profile
 GET http://localhost:8080/api/v1/users/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Update Profile
 PUT http://localhost:8080/api/v1/users/{{ user_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -117,7 +117,7 @@ Content-Type: application/json
 
 ### Change Password
 PUT http://localhost:8080/api/v1/users/07bd9d2e-6e33-4237-a262-d7dc67453336/password
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -128,7 +128,7 @@ Content-Type: application/json
 
 ### DELETE USER (admin only)
 DELETE http://localhost:8080/api/v1/users/07bd9d2e-6e33-4237-a262-d7dc67453336
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 
 
@@ -137,7 +137,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0L
 
 ### Create Pekurban (admin/panitia, user(only registered users are allowed to access))
 POST http://localhost:8080/api/v1/pekurban
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -150,19 +150,19 @@ Content-Type: application/json
 
 ### Get All Pekurban (admin/panitia only)
 GET http://localhost:8080/api/v1/pekurban
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get Pekurban by ID (admin/panitia only)
 GET http://localhost:8080/api/v1/pekurban/ad7f0345-c119-4a52-9ab7-42922e04d8b0
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get Pekurban Me
 GET http://localhost:8080/api/v1/pekurban/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Update Pekurban 
 PUT http://localhost:8080/api/v1/pekurban/53d2b555-4c8c-4e9d-8575-270ad4870553
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -174,7 +174,7 @@ Content-Type: application/json
 
 ### Delete Pekurban (admin only)
 DELETE http://localhost:8080/api/v1/pekurban/ad7f0345-c119-4a52-9ab7-42922e04d8b0
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 
 
@@ -183,7 +183,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0L
 
 ### [ADMIN] Create Hewan Kurban
 POST http://localhost:8080/api/v1/hewan-kurban
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -196,7 +196,7 @@ Content-Type: application/json
 
 ### [ADMIN] Update Hewan Kurban
 PUT http://localhost:8080/api/v1/hewan-kurban/7db4c831-684d-404b-956f-7db54d3e28fe
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -208,15 +208,15 @@ Content-Type: application/json
 
 ### [ADMIN] Delete Hewan Kurban
 DELETE http://localhost:8080/api/v1/hewan-kurban/482b7d21-6fec-4af4-aa74-e2f55680ca89
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### [ALL] Get All Hewan Kurban
 GET http://localhost:8080/api/v1/hewan-kurban
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### [ALL] Get Hewan by ID
 GET http://localhost:8080/api/v1/hewan-kurban/{{ hewan_kurban id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 
 
@@ -226,7 +226,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0L
 
 ### Create Patungan (Users can only manage their own Pekurban data, while admins and committee members are allowed to input data for any user.)
 POST http://localhost:8080/api/v1/patungan
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -237,19 +237,19 @@ Content-Type: application/json
 
 ### Get All Patungan (admin/panitia only)
 GET http://localhost:8080/api/v1/patungan
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get Patungan by Hewan (public)
-GET http://localhost:8080/api/v1/patungan/hewan/204773f8-8001-4184-91fa-872e0b583f53
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+GET http://localhost:8080/api/v1/patungan/hewan/{{ hewan_id }}
+Authorization: Bearer <access-token>
 
 ### Get Patungan by Pekurban (public)
-GET http://localhost:8080/api/v1/patungan/pekurban/37590f5c-14d1-4083-9162-6a21266d0a9d
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+GET http://localhost:8080/api/v1/patungan/pekurban/{{ your_pekurban_id }}
+Authorization: Bearer <access-token>
 
 ### Delete Patungan (only admin)
 DELETE http://localhost:8080/api/v1/patungan/{{ pekurban_id }}/{{ hewan_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 
 
@@ -271,7 +271,7 @@ Content-Type: application/json
 
 ### Update penyembelihan (admin/panitia)
 PUT http://localhost:8080/api/v1/penyembelihan/{{ penyembelihan_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -283,15 +283,15 @@ Content-Type: application/json
 
 ### Delete penyembelihan (admin only)
 DELETE http://localhost:8080/api/v1/penyembelihan/{{ penyembelihan_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get all penyembelihan (all roles)
 GET http://localhost:8080/api/v1/penyembelihan
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get penyembelihan by ID
 GET http://localhost:8080/api/v1/penyembelihan/{{ penyembelihan_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 
 
@@ -301,7 +301,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0L
 
 ### Create penerima (admin/panitia)
 POST http://localhost:8080/api/v1/penerima
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -314,15 +314,15 @@ Content-Type: application/json
 
 ### Get all penerima daging (all roles)
 GET http://localhost:8080/api/v1/penerima
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get by ID (all roles)
 GET http://localhost:8080/api/v1/penerima/{{ user_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Update penerima daging (admin/panitia)
 PUT http://localhost:8080/api/v1/penerima/{{ user_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -335,7 +335,7 @@ Content-Type: application/json
 
 ### Delete penerima daging (admin only)
 DELETE http://localhost:8080/api/v1/penerima/{{ user_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 
 
@@ -345,7 +345,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0L
 
 ### Create distribusi daging (admin/panitia)
 POST http://localhost:8080/api/v1/distribusi
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -357,23 +357,23 @@ Content-Type: application/json
 
 ### Get all distribusi (admin/panitia)
 GET http://localhost:8080/api/v1/distribusi
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get total paket distribusi (admin/panitia)
 GET http://localhost:8080/api/v1/distribusi/total-paket
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get belum terdistribusi (admin/panitia)
 GET http://localhost:8080/api/v1/distribusi/belum-terdistribusi
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get distribusi by ID (admin/panitia)
 GET http://localhost:8080/api/v1/distribusi/{{ distribusi_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Delete distribusi (admin panitia)
 DELETE http://localhost:8080/api/v1/distribusi/{{ distribusi_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 
 
@@ -383,7 +383,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0L
 
 # Create Pembayaran
 POST http://localhost:8080/api/v1/pembayaran
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 Content-Type: application/json
 
 {
@@ -395,23 +395,23 @@ Content-Type: application/json
 ###
 # Get All Pembayaran
 GET http://localhost:8080/api/v1/pembayaran
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ###
 # Get by ID
 GET http://localhost:8080/api/v1/pembayaran/{{ pembayaran_id }}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ###
 # Get by OrderID
 GET http://localhost:8080/api/v1/pembayaran/order/ORDER-20250718-927def2a
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get rekap hewan
 GET http://localhost:8080/api/v1/pembayaran/rekap/hewan
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 
 ### Get rekap pekurban
 GET http://localhost:8080/api/v1/pembayaran/rekap/pekurban
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJTYWhhYmF0LUt1cmJhbiIsInN1YiI6ImI4ZTcwM2U0LWEyNmItNDE0NS05OTIxLTFmYmU4MDRkNmE2OCIsImV4cCI6MTc1NTc2OTQ5MiwiaWF0IjoxNzU1NzY4NTkyLCJ1c2VyX2lkIjoiYjhlNzAzZTQtYTI2Yi00MTQ1LTk5MjEtMWZiZTgwNGQ2YTY4Iiwicm9sZSI6ImFkbWluIn0.cSx_phy14OzKFzJWFplXW4MSvbjP75PDYjPfyrXC1xU
+Authorization: Bearer <access-token>
 

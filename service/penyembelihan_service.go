@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"errors"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -32,6 +34,10 @@ func (s *penyembelihanService) Create(ctx context.Context, req dto.CreatePenyemb
 		return nil, err
 	}
 
+	if strings.TrimSpace(req.Lokasi) == "" {
+		return nil, errors.New("Lokasi is required")
+	}
+	
 	p := &model.Penyembelihan{
 		ID: uuid.New(),
 		HewanID: hewanID,

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -62,6 +63,20 @@ func (s *authService) Register(ctx context.Context, req dto.RegisterUserRequest)
 		return nil, errors.New("Username already used")
 	}
 
+	if req.Password != req.ConfirmPassword {
+		return nil, errors.New("Password and confirm password do not match")
+	}
+
+	if strings.TrimSpace(req.Name) == "" {
+		return nil, errors.New("Name is required")
+	}
+	if strings.TrimSpace(req.Username) == "" {
+		return nil, errors.New("Username is required")
+	}
+	if strings.TrimSpace(req.Email) == "" {
+		return nil, errors.New("Email is required")
+	}
+	
 	hashed, err := security.GeneratePasswordHash(req.Password)
 	if err != nil {
 		return nil, err

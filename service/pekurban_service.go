@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -43,16 +44,20 @@ func (s *pekurbanService) Create(ctx context.Context, req dto.CreatePekurbanRequ
 					return nil, errors.New("Invalid user ID")
 				}
 
-				if req.Name == "" {
+				if strings.TrimSpace(req.Name) == "" {
 					req.Name = user.Name
 				}
-				if req.Email == "" {
+				if strings.TrimSpace(req.Email) == "" {
 					req.Email = user.Email
 				}
 			}
 		}
 	}
 
+	if strings.TrimSpace(req.Name) == "" {
+		return nil, errors.New("Name is required")
+	}
+	
 	p := &model.Pekurban{
 		ID: uuid.New(),
 		UserId: userID,
@@ -125,16 +130,16 @@ func (s *pekurbanService) Update(ctx context.Context, id uuid.UUID, req dto.Upda
 		return err
 	}
 
-	if req.Name != nil {
+	if strings.TrimSpace(*req.Name) != "" {
 		p.Name = req.Name
 	}
-	if req.Phone != nil {
+	if strings.TrimSpace(*req.Phone) != "" {
 		p.Phone = req.Phone
 	}
-	if req.Email != nil {
+	if strings.TrimSpace(*req.Email) != "" {
 		p.Email = req.Email
 	}
-	if req.Alamat != nil {
+	if strings.TrimSpace(*req.Alamat) != "" {
 		p.Alamat = req.Alamat
 	}
 

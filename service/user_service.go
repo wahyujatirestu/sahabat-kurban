@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -51,6 +52,21 @@ func (s *userService) GetById(ctx context.Context, id uuid.UUID) (*dto.UserRespo
 }
 
 func (s *userService) Update(ctx context.Context, id uuid.UUID, req dto.UpdateUserRequest) error {
+	users, err := s.userRepo.FindById(ctx, id)
+	if err != nil || users == nil {
+		return errors.New("User not found")
+	}
+	
+	if strings.TrimSpace(req.Username) != "" {
+		users.Username = req.Username
+	}
+	if strings.TrimSpace(req.Name) != "" {
+		users.Name = req.Name
+	}
+	if strings.TrimSpace(req.Email) != "" {
+		users.Email = req.Email
+	}
+
 	user := &model.User{
 		ID: id,
 		Username: req.Username,
@@ -90,7 +106,9 @@ func (s *userService) UpdateRole(ctx context.Context, userID uuid.UUID, role str
 		return errors.New("User not found")
 	}
 
-	user.Role = role
+	if strings.TrimSpace(role) != "" {
+		user.Role = role
+	}
 
 	return s.userRepo.Update(ctx, user)
 }
@@ -99,6 +117,22 @@ func (s *userService) CreateWithRole(ctx context.Context, req dto.RegisterReques
 	hashed, err := security.GeneratePasswordHash(req.Password)
 	if err != nil {
 		return nil, err
+	}
+
+	if strings.TrimSpace(req.Name) == "" {
+		return nil, errors.New("Name is required")
+	}
+	if strings.TrimSpace(req.Username) == "" {
+		return nil, errors.New("Username is required")
+	}
+	if strings.TrimSpace(req.Email) == "" {
+		return nil, errors.New("Email is required")
+	}
+	if strings.TrimSpace(req.Password) == "" {
+		return nil, errors.New("Password is required")
+	}
+	if strings.TrimSpace(req.Role) == "" {
+		return nil, errors.New("Role is required")
 	}
 
 	user := &model.User{

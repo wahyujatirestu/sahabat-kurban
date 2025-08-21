@@ -64,7 +64,8 @@ func (s *pembayaranKurbanService) Create(ctx context.Context, req dto.CreatePaym
 
 	var total float64
 	for _, r := range patunganList {
-		hewan, err := s.hRepo.GetById(ctx, r.HewanID)
+		hewanId, _ := uuid.Parse(r.HewanID)
+		hewan, err := s.hRepo.GetById(ctx, hewanId)
 		if err != nil || hewan == nil {
 			return nil, errors.New("data hewan kurban not found")
 		}

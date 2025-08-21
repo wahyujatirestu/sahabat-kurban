@@ -72,7 +72,7 @@ func (c *Config) ReadConfig() error {
 		return errors.New("Email config is empty")
 	}
 
-	accessTokenLifetime := time.Duration(20) * time.Minute
+	accessTokenLifetime := time.Duration(10) * time.Minute
 
 	c.TokenConfig = TokenConfig{
 		AppName: 				"Sahabat-Kurban",

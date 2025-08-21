@@ -70,7 +70,6 @@ func (s *distribusiDagingService) Create(ctx context.Context, req dto.CreateDist
 	}
 
 	dis := &model.DistribusiDaging{
-		ID: uuid.New(),
 		PenerimaID: penerimaID,
 		HewanID: hewanID,
 		JumlahPaket: req.JumlahPaket,

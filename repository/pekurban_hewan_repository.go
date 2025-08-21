@@ -11,9 +11,9 @@ import (
 
 type PekurbanHewanRepository interface {
 	Create(ctx context.Context, ph *model.PekurbanHewan) error
-	FindAll(ctx context.Context) ([]*model.PekurbanHewan, error)
-	GetByHewanId(ctx context.Context, hewanID uuid.UUID) ([]*model.PekurbanHewan, error)
-	GetByPekurbanId(ctx context.Context, pekurbanID uuid.UUID) ([]*model.PekurbanHewan, error)
+	FindAll(ctx context.Context) ([]*model.PekurbanHewanJoin, error)
+	GetByHewanId(ctx context.Context, hewanID uuid.UUID) ([]*model.PekurbanHewanJoin, error)
+	GetByPekurbanId(ctx context.Context, pekurbanID uuid.UUID) ([]*model.PekurbanHewanJoin, error)
 	Update(ctx context.Context, ph *model.PekurbanHewan) error
 	Delete(ctx context.Context, pekurbanID, hewanID uuid.UUID) error
 }
@@ -31,59 +31,84 @@ func (r *pekurbanHewanRepository) Create(ctx context.Context, ph *model.Pekurban
 	return err
 }
 
-func (r *pekurbanHewanRepository) FindAll(ctx context.Context) ([]*model.PekurbanHewan, error) {
-	rows, err := r.db.QueryContext(ctx, `SELECT pekurban_id, hewan_id, porsi FROM pekurban_hewan`)
+func (r *pekurbanHewanRepository) FindAll(ctx context.Context) ([]*model.PekurbanHewanJoin, error) {
+	rows, err := r.db.QueryContext(ctx, `
+		SELECT ph.pekurban_id, p.name, ph.hewan_id, h.jenis, ph.porsi
+        FROM pekurban_hewan ph
+        JOIN pekurban p ON ph.pekurban_id = p.id
+        JOIN hewan_kurban h ON ph.hewan_id = h.id`,
+	)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var result []*model.PekurbanHewan
+	var result []*model.PekurbanHewanJoin
 	for rows.Next() {
-		var rel model.PekurbanHewan
-		if err := rows.Scan(&rel.PekurbanID, &rel.HewanID, &rel.Porsi); err != nil {
+		ph, err := scanPekurbanHewan(rows)
+		if err != nil {
 			return nil, err
 		}
-		result = append(result, &rel)
+		result = append(result, ph)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (r *pekurbanHewanRepository) GetByHewanId(ctx context.Context, hewanID uuid.UUID) ([]*model.PekurbanHewanJoin, error) {
+	rows, err := r.db.QueryContext(ctx, `
+		SELECT ph.pekurban_id, p.name, ph.hewan_id, h.jenis, ph.porsi
+        FROM pekurban_hewan ph
+        JOIN pekurban p ON ph.pekurban_id = p.id
+        JOIN hewan_kurban h ON ph.hewan_id = h.id 
+		WHERE hewan_id = $1`, hewanID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var result []*model.PekurbanHewanJoin
+	for rows.Next() {
+		ph, err := scanPekurbanHewan(rows)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, ph)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
 	}
 	return result, nil
 }
 
-
-func (r *pekurbanHewanRepository) GetByHewanId(ctx context.Context, hewanID uuid.UUID) ([]*model.PekurbanHewan, error) {
-	rows, err := r.db.QueryContext(ctx, `SELECT pekurban_id, hewan_id, porsi FROM pekurban_hewan WHERE hewan_id = $1`, hewanID)
+func (r *pekurbanHewanRepository) GetByPekurbanId(ctx context.Context, pekurbanID uuid.UUID) ([]*model.PekurbanHewanJoin, error) {
+	rows, err := r.db.QueryContext(ctx, `
+		SELECT ph.pekurban_id, p.name, ph.hewan_id, h.jenis, ph.porsi
+        FROM pekurban_hewan ph
+        JOIN pekurban p ON ph.pekurban_id = p.id
+        JOIN hewan_kurban h ON ph.hewan_id = h.id 
+		WHERE pekurban_id = $1`, pekurbanID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var result []*model.PekurbanHewan
+	var result []*model.PekurbanHewanJoin
 	for rows.Next() {
-		var ph model.PekurbanHewan
-		if err := rows.Scan(&ph.PekurbanID, &ph.HewanID, &ph.Porsi); err != nil {
+		ph, err := scanPekurbanHewan(rows)
+		if err != nil {
 			return nil, err
 		}
-
-		result = append(result, &ph)
+		result = append(result, ph)
 	}
-	return result, nil
-}
 
-func (r *pekurbanHewanRepository) GetByPekurbanId(ctx context.Context, pekurbanID uuid.UUID) ([]*model.PekurbanHewan, error) {
-	rows, err := r.db.QueryContext(ctx, `SELECT pekurban_id, hewan_id, porsi FROM pekurban_hewan WHERE pekurban_id = $1`, pekurbanID)
-	if err != nil {
+	if err = rows.Err(); err != nil {
 		return nil, err
-	}
-	defer rows.Close()
-
-	var result []*model.PekurbanHewan
-	for rows.Next() {
-		var ph model.PekurbanHewan
-		if err := rows.Scan(&ph.PekurbanID, &ph.HewanID, &ph.Porsi); err != nil {
-			return nil, err
-		}
-
-		result = append(result, &ph)
 	}
 	return result, nil
 }
@@ -123,4 +148,19 @@ func (r *pekurbanHewanRepository) Delete(ctx context.Context, pekurbanID, hewanI
 	}
 
 	return nil
+}
+
+func scanPekurbanHewan(rows *sql.Rows) (*model.PekurbanHewanJoin, error) {
+	var ph model.PekurbanHewanJoin
+	err := rows.Scan(
+		&ph.PekurbanID,
+		&ph.Pekurban,
+		&ph.HewanID,
+		&ph.Hewan,
+		&ph.Porsi,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &ph, nil
 }

@@ -21,11 +21,6 @@ func (c *AuthController) Register(ctx *gin.Context) {
 		return
 	}
 
-	if req.Password != req.ConfirmPassword {
-		ctx.JSON(400, gin.H{"error": "Confirm password does not match"})
-		return
-	}
-
 	res, err := c.authService.Register(ctx.Request.Context(), req)
 	if err != nil {
 		ctx.JSON(400, gin.H{"error": err.Error()})

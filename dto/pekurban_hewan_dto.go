@@ -9,9 +9,12 @@ type CreatePekurbanHewanRequest struct {
 }
 
 type PekurbanHewanResponse struct {
-	PekurbanID string  `json:"pekurban_id"`
-	HewanID    string  `json:"hewan_id"`
-	Porsi      float64 `json:"porsi"`
+	PekurbanID 	string  `json:"pekurban_id"`
+	Pekurban   	string  `json:"pekurban"`
+	HewanID    	string  `json:"hewan_id"`
+	Hewan      	string  `json:"hewan"`
+	Porsi      	float64 `json:"porsi"`
+	JumlahOrang int     `json:"jumlah_orang"`
 }
 
 type UpdatePekurbanHewanRequest struct {

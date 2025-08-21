@@ -44,8 +44,10 @@ func (c *PekurbanHewanController) Create(ctx *gin.Context) {
 		}
 	}	
 
-	if err := c.service.Create(ctx.Request.Context(), req); err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+	if data, err := c.service.Create(ctx.Request.Context(), req); err != nil {
+		ctx.JSON(500, gin.H{
+			"data":  data,
+			"error": err.Error()})
 		return
 	}
 
@@ -145,12 +147,16 @@ func (c *PekurbanHewanController) Update(ctx *gin.Context) {
 		return
 	}
 
-	if err := c.service.Update(ctx.Request.Context(), pekurbanID, hewanID, req); err != nil {
+	data, err := c.service.Update(ctx.Request.Context(), pekurbanID, hewanID, req)
+	if err != nil {
 		ctx.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, gin.H{"message": "porsi updated successfully"})
+	ctx.JSON(200, gin.H{
+		"data":    data,
+		"message": "porsi updated successfully",
+	})
 }
 
 

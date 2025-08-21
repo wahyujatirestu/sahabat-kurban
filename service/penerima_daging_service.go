@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -38,6 +39,10 @@ func (s *penerimaDagingService) Create(ctx context.Context, req dto.CreatePeneri
 			pekurban, err := s.repoPk.FindById(ctx, id)
 			if err != nil || pekurban == nil {
 				return nil, errors.New("Pekurban not found")
+			}
+
+			if strings.TrimSpace(*pekurban.Name) == "" {
+				return nil, errors.New("Pekurban name is required")
 			}
 
 			if req.Name == "" && pekurban.Name != nil {
@@ -102,13 +107,13 @@ func (s *penerimaDagingService) Update(ctx context.Context, id uuid.UUID, req dt
 		return err
 	}
 
-	if req.Name != nil {
+	if strings.TrimSpace(*req.Name) != "" {
 		existing.Name = *req.Name
 	}
-	if req.Alamat != nil {
+	if strings.TrimSpace(*req.Alamat) != "" {
 		existing.Alamat = req.Alamat
 	}
-	if req.Phone != nil {
+	if strings.TrimSpace(*req.Phone) != "" {
 		existing.Phone = req.Phone
 	}
 	existing.Status = req.Status

@@ -7,3 +7,11 @@ type PekurbanHewan struct {
 	HewanID 	uuid.UUID	`db:"hewan_id"`
 	Porsi		float64		`db:"porsi"`
 }
+
+type PekurbanHewanJoin struct {
+	PekurbanID string
+	Pekurban   string
+	HewanID    string
+	Hewan      string
+	Porsi      float64
+}

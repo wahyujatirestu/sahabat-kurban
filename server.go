@@ -84,7 +84,7 @@ func NewServer() *Server {
 	userService := service.NewUserService(userRepo)
 	pekurbanService := service.NewPekurbanService(pekurbanRepo, userRepo)
 	hewanKurbanService := service.NewHewanKurbanService(hewanKurbanRepo, penyembelihanRepo)
-	pekurbanHewanService := service.NewPekurbanHewanService(pekurbanHewanRepo, hewanKurbanRepo)
+	pekurbanHewanService := service.NewPekurbanHewanService(pekurbanHewanRepo, pekurbanRepo, hewanKurbanRepo)
 	penyembelihanService := service.NewPenyembelihanService(penyembelihanRepo)
 	penerimaService := service.NewPenerimaDagingService(penerimaRepo, pekurbanRepo)
 	distribusiService := service.NewDistribusiDagingService(distribusiRepo, penerimaRepo, hewanKurbanRepo)

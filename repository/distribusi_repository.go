@@ -27,35 +27,47 @@ func NewDistribusiDagingRepository(db *sql.DB) DistribusiDagingRepository {
 }
 
 func (r *distribusiDagingRepository) Create(ctx context.Context, d *model.DistribusiDaging) error {
-	_, err := r.db.ExecContext(ctx, `INSERT INTO distribusi_daging (id, penerima_id, hewan_id, jumlah_paket, tanggal_distribusi, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7)`, d.ID, d.PenerimaID, d.HewanID, d.JumlahPaket, d.TanggalDistribusi, d.Created_At, d.Updated_At)
+	_, err := r.db.ExecContext(ctx, `INSERT INTO distribusi_daging (id, penerima_id, jumlah_paket, tanggal_distribusi, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`, d.ID, d.PenerimaID, d.JumlahPaket, d.TanggalDistribusi, d.Created_At, d.Updated_At)
 	return err
 }
 
 func (r *distribusiDagingRepository) GetAll(ctx context.Context) ([]*model.DistribusiDaging, error) {
-	rows, err := r.db.QueryContext(ctx, `SELECT id, penerima_id, hewan_id, jumlah_paket, tanggal_distribusi, created_at, updated_at FROM distribusi_daging`)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+    rows, err := r.db.QueryContext(ctx, `
+        SELECT d.id, d.penerima_id, p.name, d.jumlah_paket, d.tanggal_distribusi, d.created_at, d.updated_at
+        FROM distribusi_daging d
+        JOIN penerima_daging p ON d.penerima_id = p.id
+    `)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
 
-	var result []*model.DistribusiDaging
-	for rows.Next(){
-		var d model.DistribusiDaging
-		if err:= rows.Scan(&d.ID, &d.PenerimaID, &d.HewanID, &d.JumlahPaket, &d.TanggalDistribusi, &d.Created_At, &d.Updated_At); err != nil {
-			return nil, err
-		}
+    var result []*model.DistribusiDaging
+    for rows.Next() {
+        var d model.DistribusiDaging
+        var penerimaName string
 
-		result = append(result, &d)
-	}
+        if err := rows.Scan(&d.ID, &d.PenerimaID, &penerimaName, &d.JumlahPaket, &d.TanggalDistribusi, &d.Created_At, &d.Updated_At); err != nil {
+            return nil, err
+        }
 
-	return result, nil
+        d.PenerimaName = penerimaName 
+        result = append(result, &d)
+    }
+
+    return result, nil
 }
 
+
 func (r *distribusiDagingRepository) GetByID(ctx context.Context, id uuid.UUID) (*model.DistribusiDaging, error) {
-	rows := r.db.QueryRowContext(ctx, `SELECT id, penerima_id, hewan_id, jumlah_paket, tanggal_distribusi, created_at, updated_at FROM distribusi_daging WHERE id = $1`, id)
+	rows := r.db.QueryRowContext(ctx, `
+		SELECT d.id, d.penerima_id, p.name, d.jumlah_paket, d.tanggal_distribusi, d.created_at, d.updated_at 
+		FROM distribusi_daging d
+		JOIN penerima_daging p ON d.penerima_id = p.id 
+		WHERE d.id = $1`, id)
 
 	var d model.DistribusiDaging
-	if err := rows.Scan(&d.ID, &d.PenerimaID, &d.HewanID, &d.JumlahPaket, &d.TanggalDistribusi, &d.Created_At, &d.Updated_At); err != nil {
+	if err := rows.Scan(&d.ID, &d.PenerimaID, &d.PenerimaName, &d.JumlahPaket, &d.TanggalDistribusi, &d.Created_At, &d.Updated_At); err != nil {
 		return nil, err
 	}
 
@@ -63,10 +75,22 @@ func (r *distribusiDagingRepository) GetByID(ctx context.Context, id uuid.UUID) 
 }
 
 func (r *distribusiDagingRepository) FindByPenerimaID(ctx context.Context, penerimaID uuid.UUID) (*model.DistribusiDaging, error) {
-	rows := r.db.QueryRowContext(ctx, `SELECT id, penerima_id, hewan_id, jumlah_paket, tanggal_distribusi, created_at, updated_at FROM distribusi_daging WHERE penerima_id = $1`, penerimaID)
+	row := r.db.QueryRowContext(ctx, `
+		SELECT d.id, d.penerima_id, p.name, d.jumlah_paket, d.tanggal_distribusi, d.created_at, d.updated_at 
+		FROM distribusi_daging d
+		JOIN penerima_daging p ON d.penerima_id = p.id 
+		WHERE d.penerima_id = $1`, penerimaID)
 
 	var d model.DistribusiDaging
-	if err := rows.Scan(&d.ID, &d.PenerimaID, &d.HewanID, &d.JumlahPaket, &d.TanggalDistribusi, &d.Created_At, &d.Updated_At); err != nil {
+	if err := row.Scan(
+		&d.ID,
+		&d.PenerimaID,
+		&d.PenerimaName,
+		&d.JumlahPaket,
+		&d.TanggalDistribusi,
+		&d.Created_At,
+		&d.Updated_At,
+	); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
 		}
@@ -75,6 +99,7 @@ func (r *distribusiDagingRepository) FindByPenerimaID(ctx context.Context, pener
 
 	return &d, nil
 }
+
 
 func (r *distribusiDagingRepository) CountTotalPaket(ctx context.Context) (int, error) {
 	var total int

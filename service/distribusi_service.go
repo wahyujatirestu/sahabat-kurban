@@ -22,22 +22,17 @@ type DistribusiDagingService interface {
 
 type distribusiDagingService struct {
 	repo repository.DistribusiDagingRepository
-	penerimaRepo repository.PenerimaDagingRepository
-	hewanRepo repository.HewanKurbanRepository
+	penerimaRepo repository.PenerimaDagingRepository	
 }
 
-func NewDistribusiDagingService(repo repository.DistribusiDagingRepository, penerimaRepo repository.PenerimaDagingRepository, hewanRepo repository.HewanKurbanRepository) DistribusiDagingService {
-	return &distribusiDagingService{repo: repo, penerimaRepo: penerimaRepo, hewanRepo: hewanRepo}
+func NewDistribusiDagingService(repo repository.DistribusiDagingRepository, penerimaRepo repository.PenerimaDagingRepository, ) DistribusiDagingService {
+	return &distribusiDagingService{repo: repo, penerimaRepo: penerimaRepo}
 }
 
 func (s *distribusiDagingService) Create(ctx context.Context, req dto.CreateDistribusiRequest) (*dto.DistribusiResponse, error) {
 	penerimaID, err := uuid.Parse(req.PenerimaID)
 	if err != nil {
 		return nil, errors.New("Invalid Penerima ID")
-	}
-	hewanID, err := uuid.Parse(req.HewanID)
-	if err != nil {
-		return nil, errors.New("Invalid Hewan ID")
 	}
 
 	tanggalDistribusi, err := time.Parse("2006-01-02", req.TanggalDistribusi)
@@ -53,14 +48,6 @@ func (s *distribusiDagingService) Create(ctx context.Context, req dto.CreateDist
 		return nil, errors.New("Penerima not found")
 	}
 
-	hewan, err := s.hewanRepo.GetById(ctx, hewanID)
-	if err != nil {
-		return nil, err
-	}
-	if hewan == nil {
-		return nil, errors.New("Hewan not found")
-	}
-
 	existing, err := s.repo.FindByPenerimaID(ctx, penerimaID)
 	if err != nil {
 		return nil, err
@@ -70,8 +57,8 @@ func (s *distribusiDagingService) Create(ctx context.Context, req dto.CreateDist
 	}
 
 	dis := &model.DistribusiDaging{
+		ID: uuid.New(),	
 		PenerimaID: penerimaID,
-		HewanID: hewanID,
 		JumlahPaket: req.JumlahPaket,
 		TanggalDistribusi: tanggalDistribusi,
 		Created_At: time.Now(),
@@ -82,7 +69,13 @@ func (s *distribusiDagingService) Create(ctx context.Context, req dto.CreateDist
 		return nil, err
 	}
 
-	res := dto.ToDistribusiResponse(dis)
+	res := dto.DistribusiResponse{
+		ID: dis.ID.String(),
+		PenerimaID: dis.PenerimaID.String(),
+		PenerimaName: penerima.Name,
+		JumlahPaket: dis.JumlahPaket,
+		TanggalDistribusi: dis.TanggalDistribusi,
+	}
 	return &res, nil
 }
 
@@ -118,7 +111,7 @@ func (s *distribusiDagingService) GetPenerimaBelumTerdistribusi(ctx context.Cont
 	list, err := s.penerimaRepo.GetAll(ctx)
 	if err != nil {
 		return nil, err
-	}
+	}	
 
 	var result []dto.PenerimaResponse
 	for _, penerima := range list {

@@ -282,8 +282,6 @@ func (s *pekurbanHewanService) Update(ctx context.Context, pekurbanID, hewanID u
 	}, nil
 }
 
-
-
 func (s *pekurbanHewanService) Delete(ctx context.Context, pekurbanID, hewanID uuid.UUID) error {
 	return s.repo.Delete(ctx, pekurbanID, hewanID)
 }

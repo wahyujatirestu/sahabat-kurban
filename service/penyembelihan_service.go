@@ -49,6 +49,7 @@ func (s *penyembelihanService) Create(ctx context.Context, req dto.CreatePenyemb
 	}
 
 	p := &model.Penyembelihan{
+		ID: uuid.New(),
 		HewanID: hewanID,
 		TglPenyembelihan: req.TanggalPenyembelihan,
 		Lokasi: req.Lokasi,

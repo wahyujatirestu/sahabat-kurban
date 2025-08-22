@@ -18,7 +18,7 @@ type RegisterRequest struct {
 
 type LoginRequest struct {
 	Identifier		string		`json:"identifier" binding:"required"`
-	Password		string		`json:"Password" binding:"required"`	
+	Password		string		`json:"password" binding:"required"`	
 }
 
 type AuthResponse struct {

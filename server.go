@@ -4,7 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	_ "github.com/wahyujatirestu/sahabat-kurban/docs"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	"github.com/wahyujatirestu/sahabat-kurban/config"
@@ -29,6 +31,7 @@ type Server struct {
 	pembayaranRepo			repository.PembayaranKurbanRepository
 	emailRepo				utilsrepo.EmailVerificationRepository
 	resetRepo 				utilsrepo.ResetPasswordRepository
+	laporanRepo 			repository.ReportRepository
 	userService 			service.UserService
 	authService 			service.AuthService
 	emailService			utilsservice.EmailService
@@ -41,6 +44,7 @@ type Server struct {
 	distribusiService 		service.DistribusiDagingService
 	midtransService			payserv.MidtransService
 	pembayaranService		service.PembayaranKurbanService
+	laporanService			service.ReportService
 	rtRepo 					utilsrepo.RefreshTokenRepository
 	db 						*sql.DB
 	engine 					*gin.Engine
@@ -71,6 +75,7 @@ func NewServer() *Server {
 	penerimaRepo := repository.NewPenerimaDagingRepository(db)
 	distribusiRepo := repository.NewDistribusiDagingRepository(db)
 	pembayaranRepo := repository.NewPembayaranKurbanRepository(db)
+	laporanRepo := repository.NewReportRepository(db)
 
 	emailService := utilsservice.NewEmailService(
 		cfg.SendgridAPIKey,
@@ -87,9 +92,10 @@ func NewServer() *Server {
 	pekurbanHewanService := service.NewPekurbanHewanService(pekurbanHewanRepo, pekurbanRepo, hewanKurbanRepo)
 	penyembelihanService := service.NewPenyembelihanService(penyembelihanRepo, pembayaranRepo)
 	penerimaService := service.NewPenerimaDagingService(penerimaRepo, pekurbanRepo)
-	distribusiService := service.NewDistribusiDagingService(distribusiRepo, penerimaRepo, hewanKurbanRepo)
+	distribusiService := service.NewDistribusiDagingService(distribusiRepo, penerimaRepo)
 	midtransService := payserv.NewMidtransService()
 	pembayaranService := service.NewPembayaranKurbanService(pembayaranRepo, midtransService, pekurbanHewanRepo, hewanKurbanRepo, pekurbanRepo)
+	laporanService := service.NewReportService(laporanRepo)
 
 	engine := gin.Default()
 	host := fmt.Sprintf(":%s", cfg.ApiPort)
@@ -108,6 +114,7 @@ func NewServer() *Server {
 		distribusiRepo: distribusiRepo,
 		pembayaranRepo: pembayaranRepo,
 		emailRepo: emailRepo,
+		laporanRepo: laporanRepo,
 		db: db,
 		authService: authService,
 		userService: userService,
@@ -121,12 +128,14 @@ func NewServer() *Server {
 		distribusiService: distribusiService,
 		midtransService: midtransService,
 		pembayaranService: pembayaranService,
+		laporanService: laporanService,
 		engine: engine,
 		host: host,
 	}
 }
 
 func (s *Server) SetupRoutes() {
+	s.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	apiV1 := s.engine.Group("/api/v1")
 	authMw := middleware.NewAuthMiddleware(s.jwtService)
 
@@ -139,6 +148,7 @@ func (s *Server) SetupRoutes() {
 	penerimaController := controller.NewPenerimaDagingController(s.penerimaService)
 	distribusiController := controller.NewDistribusiDagingController(s.distribusiService)
 	pembayaranController := controller.NewPembayaranController(s.pembayaranService, s.pekurbanService)
+	laporanController := controller.NewReportController(s.laporanService)
 
 	routes.AuthRoute(apiV1, authController)
 	routes.UserRoute(apiV1, userController, authMw)
@@ -149,6 +159,7 @@ func (s *Server) SetupRoutes() {
 	routes.PenerimaDagingRoute(apiV1, penerimaController, authMw)
 	routes.DistribusiDagingRoute(apiV1, distribusiController, authMw)
 	routes.PembayaranRoute(apiV1, pembayaranController, authMw)
+	routes.RegisterReportRoutes(apiV1, authMw, laporanController)
 }
 
 func (s *Server) Run() {

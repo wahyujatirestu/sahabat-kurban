@@ -16,6 +16,21 @@ func NewPekurbanController(pService service.PekurbanService) *PekurbanController
 	return &PekurbanController{pService: pService}
 }
 
+// Create godoc
+// @Summary Create Pekurban
+// @Description Daftarkan user atau panitia sebagai pekurban
+// @Tags Pekurban
+// @Accept json
+// @Produce json
+// @Param request body dto.CreatePekurbanRequest true "Pekurban request"
+// @Success 201 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 403 {object} map[string]interface{}
+// @Failure 409 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /pekurban [post]
 func (c *PekurbanController) Create(ctx *gin.Context) {
 	userRaw, exist := ctx.Get("user")
 	if !exist {
@@ -77,6 +92,16 @@ func (c *PekurbanController) Create(ctx *gin.Context) {
 	})
 }
 
+// GetAll godoc
+// @Summary Get all Pekurban
+// @Description Ambil semua data pekurban (khusus admin & panitia)
+// @Tags Pekurban
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /pekurban [get]
 func (c *PekurbanController) GetAll(ctx *gin.Context) {
 	data, err := c.pService.GetAll(ctx.Request.Context())
 	if err != nil {
@@ -93,6 +118,18 @@ func (c *PekurbanController) GetAll(ctx *gin.Context) {
 	})
 }
 
+// GetById godoc
+// @Summary Get Pekurban by ID
+// @Description Ambil detail pekurban berdasarkan ID (khusus admin & panitia)
+// @Tags Pekurban
+// @Produce json
+// @Param id path string true "Pekurban ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /pekurban/{id} [get]
 func (c *PekurbanController) GetById(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {
@@ -117,6 +154,16 @@ func (c *PekurbanController) GetById(ctx *gin.Context) {
 	})
 }
 
+// GetMe godoc
+// @Summary Get My Pekurban Data
+// @Description Ambil data pekurban milik user yang sedang login
+// @Tags Pekurban
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /pekurban/me [get]
 func (c *PekurbanController) GetMe(ctx *gin.Context) {
 	userRaw, exists := ctx.Get("user")
 	if !exists {
@@ -143,7 +190,22 @@ func (c *PekurbanController) GetMe(ctx *gin.Context) {
 	})
 }
 
-
+// Update godoc
+// @Summary Update Pekurban
+// @Description Ubah data pekurban berdasarkan ID (role-based access)
+// @Tags Pekurban
+// @Accept json
+// @Produce json
+// @Param id path string true "Pekurban ID"
+// @Param request body dto.UpdatePekurbanRequest true "Update request"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 403 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /pekurban/{id} [put]
 func (c *PekurbanController) Update(ctx *gin.Context) {
 	userRaw, exist := ctx.Get("user")
 	if !exist {
@@ -211,6 +273,18 @@ func (c *PekurbanController) Update(ctx *gin.Context) {
 	})
 }
 
+// Delete godoc
+// @Summary Delete Pekurban
+// @Description Hapus data pekurban berdasarkan ID (khusus admin)
+// @Tags Pekurban
+// @Produce json
+// @Param id path string true "Pekurban ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /pekurban/{id} [delete]
 func (c *PekurbanController) Delete(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("id"))
 	if err != nil {

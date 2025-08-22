@@ -14,6 +14,16 @@ func NewAuthController(authService service.AuthService) *AuthController {
 	return &AuthController{authService: authService}
 }
 
+// Register godoc
+// @Summary Register a new user
+// @Description Create a new user account
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body dto.RegisterUserRequest true "Register request"
+// @Success 201 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Router /auth/register [post]
 func (c *AuthController) Register(ctx *gin.Context) {
 	var req dto.RegisterUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -38,6 +48,17 @@ func (c *AuthController) Register(ctx *gin.Context) {
 	})
 }
 
+// Login godoc
+// @Summary Login user
+// @Description Authenticate user and return JWT tokens
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body dto.LoginRequest true "Login request"
+// @Success 200 {object} dto.AuthResponse
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Router /auth/login [post]
 func (c *AuthController) Login(ctx *gin.Context) {
 	var req dto.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -62,6 +83,17 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	})
 }
 
+// RefreshToken godoc
+// @Summary Refresh access token
+// @Description Refresh JWT access token using refresh token
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body dto.RefreshTokenRequest true "Refresh request"
+// @Success 200 {object} dto.TokenOnlyResponse
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Router /auth/refresh [post]
 func (c *AuthController) RefreshToken(ctx *gin.Context) {
 	var req dto.RefreshTokenRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -82,6 +114,17 @@ func (c *AuthController) RefreshToken(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{"token": res})
 }
 
+// Logout godoc
+// @Summary Logout user
+// @Description Invalidate refresh token and logout
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body dto.RefreshTokenRequest true "Logout request"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /auth/logout [post]
 func (c *AuthController) Logout(ctx *gin.Context) {
 	var req dto.RefreshTokenRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -104,6 +147,16 @@ func (c *AuthController) Logout(ctx *gin.Context) {
 	})
 }
 
+// VerifyEmail godoc
+// @Summary Verify email
+// @Description Verify user email using token sent by email
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param token query string true "Verification token"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Router /auth/verify-email [get]
 func (c *AuthController) VerifyEmail(ctx *gin.Context) {
 	token := ctx.Query("token")
 	if token == "" {
@@ -127,6 +180,16 @@ func (c *AuthController) VerifyEmail(ctx *gin.Context) {
 	})
 }
 
+// ResendVerification godoc
+// @Summary Resend verification email
+// @Description Resend email verification link
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body dto.ResendVerificationRequest true "Resend verification request"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Router /auth/resend-verification [post]
 func (c *AuthController) ResendVerification(ctx *gin.Context) {
 	var req dto.ResendVerificationRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -149,6 +212,16 @@ func (c *AuthController) ResendVerification(ctx *gin.Context) {
 		"message": "Verification email has been resent successfully"})
 }
 
+// ForgotPassword godoc
+// @Summary Forgot password
+// @Description Send reset password link to user email
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body dto.ForgotPasswordRequest true "Forgot password request"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Router /auth/forgot-password [post]
 func (c *AuthController) ForgotPassword(ctx *gin.Context) {
 	var req dto.ForgotPasswordRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -170,6 +243,16 @@ func (c *AuthController) ForgotPassword(ctx *gin.Context) {
 	})
 }
 
+// ResetPassword godoc
+// @Summary Reset password
+// @Description Reset user password using token
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body dto.ResetPasswordRequest true "Reset password request"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Router /auth/reset-password [post]
 func (c *AuthController) ResetPassword(ctx *gin.Context) {
 	var req dto.ResetPasswordRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {

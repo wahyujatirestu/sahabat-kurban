@@ -15,6 +15,19 @@ func NewPenyembelihanController(s service.PenyembelihanService) *PenyembelihanCo
 	return &PenyembelihanController{service: s}
 }
 
+// Create godoc
+// @Summary Create penyembelihan
+// @Description Membuat data penyembelihan baru
+// @Tags Penyembelihan
+// @Accept json
+// @Produce json
+// @Param request body dto.CreatePenyembelihanRequest true "Create Penyembelihan Request"
+// @Success 201 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /penyembelihan [post]
+// @Security BearerAuth
 func (c *PenyembelihanController) Create(ctx *gin.Context) {
 	var req dto.CreatePenyembelihanRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -39,6 +52,16 @@ func (c *PenyembelihanController) Create(ctx *gin.Context) {
 	})
 }
 
+// GetAll godoc
+// @Summary Get all penyembelihan
+// @Description Mengambil semua data penyembelihan
+// @Tags Penyembelihan
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /penyembelihan [get]
+// @Security BearerAuth
 func (c *PenyembelihanController) GetAll(ctx *gin.Context) {
 	res, err := c.service.GetAll(ctx)
 	if err != nil {
@@ -55,6 +78,18 @@ func (c *PenyembelihanController) GetAll(ctx *gin.Context) {
 	})
 }
 
+// GetById godoc
+// @Summary Get penyembelihan by ID
+// @Description Mengambil detail penyembelihan berdasarkan ID
+// @Tags Penyembelihan
+// @Produce json
+// @Param id path string true "Penyembelihan ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /penyembelihan/{id} [get]
+// @Security BearerAuth
 func (c *PenyembelihanController) GetById(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -80,6 +115,20 @@ func (c *PenyembelihanController) GetById(ctx *gin.Context) {
 	})
 }
 
+// Update godoc
+// @Summary Update penyembelihan
+// @Description Mengupdate data penyembelihan berdasarkan ID
+// @Tags Penyembelihan
+// @Accept json
+// @Produce json
+// @Param id path string true "Penyembelihan ID"
+// @Param request body dto.UpdatePenyembelihanRequest true "Update Penyembelihan Request"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /penyembelihan/{id} [put]
+// @Security BearerAuth
 func (c *PenyembelihanController) Update(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -113,6 +162,18 @@ func (c *PenyembelihanController) Update(ctx *gin.Context) {
 	})
 }
 
+// Delete godoc
+// @Summary Delete penyembelihan
+// @Description Menghapus data penyembelihan berdasarkan ID
+// @Tags Penyembelihan
+// @Produce json
+// @Param id path string true "Penyembelihan ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /penyembelihan/{id} [delete]
+// @Security BearerAuth
 func (c *PenyembelihanController) Delete(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)

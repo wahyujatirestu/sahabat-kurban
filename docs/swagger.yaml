@@ -1,0 +1,2346 @@
+basePath: /api/v1
+definitions:
+  dto.AuthResponse:
+    properties:
+      accessToken:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      refreshToken:
+        type: string
+      role:
+        type: string
+    type: object
+  dto.ChangePasswordRequest:
+    properties:
+      confirm_password:
+        type: string
+      new_password:
+        minLength: 8
+        type: string
+      old_password:
+        type: string
+    required:
+    - confirm_password
+    - new_password
+    - old_password
+    type: object
+  dto.CreateDistribusiRequest:
+    properties:
+      jumlah_paket:
+        minimum: 1
+        type: integer
+      penerima_id:
+        type: string
+      tanggal_distribusi:
+        type: string
+    required:
+    - jumlah_paket
+    - penerima_id
+    - tanggal_distribusi
+    type: object
+  dto.CreateHewanKurbanRequest:
+    properties:
+      berat:
+        type: number
+      harga:
+        type: number
+      is_private:
+        type: boolean
+      jenis:
+        enum:
+        - sapi
+        - kambing
+        - domba
+        type: string
+      tanggal_pendaftaran:
+        type: string
+    required:
+    - berat
+    - jenis
+    - tanggal_pendaftaran
+    type: object
+  dto.CreatePaymentRequest:
+    properties:
+      bank:
+        type: string
+      metode:
+        type: string
+      pekurban_id:
+        type: string
+    required:
+    - metode
+    - pekurban_id
+    type: object
+  dto.CreatePekurbanHewanRequest:
+    properties:
+      hewan_id:
+        type: string
+      jumlah_orang:
+        maximum: 7
+        type: integer
+      pekurban_id:
+        type: string
+    required:
+    - hewan_id
+    - jumlah_orang
+    - pekurban_id
+    type: object
+  dto.CreatePekurbanRequest:
+    properties:
+      alamat:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      user_id:
+        type: string
+    required:
+    - alamat
+    - phone
+    type: object
+  dto.CreatePenerimaRequest:
+    properties:
+      alamat:
+        type: string
+      name:
+        type: string
+      pekurban_id:
+        type: string
+      phone:
+        type: string
+      status:
+        enum:
+        - warga
+        - dhuafa
+        - panitia
+        - pekurban
+        type: string
+    required:
+    - status
+    type: object
+  dto.CreatePenyembelihanRequest:
+    properties:
+      hewan_id:
+        type: string
+      lokasi:
+        type: string
+      tanggal_penyembelihan:
+        type: string
+      urutan_rencana:
+        minimum: 1
+        type: integer
+    required:
+    - hewan_id
+    - lokasi
+    - tanggal_penyembelihan
+    type: object
+  dto.DistribusiDTO:
+    properties:
+      kategori:
+        type: string
+      total_paket:
+        type: integer
+      total_penerima:
+        type: integer
+    type: object
+  dto.ForgotPasswordRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  dto.HewanDTO:
+    properties:
+      berat:
+        type: number
+      harga:
+        type: number
+      jenis:
+        type: string
+      total:
+        type: integer
+    type: object
+  dto.LaporanResponse:
+    properties:
+      detail_pekurban:
+        items:
+          $ref: '#/definitions/dto.PekurbanDTO'
+        type: array
+      distribusi:
+        items:
+          $ref: '#/definitions/dto.DistribusiDTO'
+        type: array
+      rekap_hewan:
+        items:
+          $ref: '#/definitions/dto.HewanDTO'
+        type: array
+      rekap_pembayaran:
+        items:
+          $ref: '#/definitions/dto.PembayaranDTO'
+        type: array
+      ringkasan:
+        $ref: '#/definitions/dto.RingkasanDTO'
+      tanggal:
+        type: string
+    type: object
+  dto.LoginRequest:
+    properties:
+      identifier:
+        type: string
+      password:
+        type: string
+    required:
+    - identifier
+    - password
+    type: object
+  dto.PekurbanDTO:
+    properties:
+      email:
+        type: string
+      hewan:
+        items:
+          $ref: '#/definitions/dto.PekurbanHewanDTO'
+        type: array
+      nama:
+        type: string
+      pekurban_id:
+        type: string
+      phone:
+        type: string
+      status_pembayaran:
+        description: lunas/belum
+        type: string
+      total_bayar:
+        type: number
+      total_hewan:
+        type: integer
+      total_kewajiban:
+        type: number
+    type: object
+  dto.PekurbanHewanDTO:
+    properties:
+      berat:
+        type: number
+      harga:
+        type: number
+      hewan_id:
+        type: string
+      jenis:
+        type: string
+      porsi:
+        type: number
+    type: object
+  dto.PembayaranDTO:
+    properties:
+      jumlah:
+        type: number
+      status:
+        type: string
+      total:
+        type: integer
+    type: object
+  dto.RefreshTokenRequest:
+    properties:
+      refreshToken:
+        type: string
+    required:
+    - refreshToken
+    type: object
+  dto.RegisterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      role:
+        enum:
+        - admin
+        - panitia
+        - user
+        type: string
+      username:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - role
+    - username
+    type: object
+  dto.RegisterUserRequest:
+    properties:
+      confirm_password:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      username:
+        minLength: 8
+        type: string
+    required:
+    - confirm_password
+    - email
+    - name
+    - password
+    - username
+    type: object
+  dto.ResendVerificationRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  dto.ResetPasswordRequest:
+    properties:
+      confirm_password:
+        type: string
+      new_password:
+        minLength: 8
+        type: string
+      token:
+        type: string
+    required:
+    - confirm_password
+    - new_password
+    - token
+    type: object
+  dto.RingkasanDTO:
+    properties:
+      total_hewan:
+        type: integer
+      total_paket_distribusi:
+        type: integer
+      total_pekurban:
+        type: integer
+      total_pembayaran:
+        type: number
+      total_penerima:
+        type: integer
+    type: object
+  dto.TokenOnlyResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  dto.UpdateHewanKurbanRequest:
+    properties:
+      berat:
+        type: number
+      harga:
+        type: number
+      is_private:
+        type: boolean
+      jenis:
+        enum:
+        - sapi
+        - kambing
+        - domba
+        type: string
+      tanggal_pendaftaran:
+        type: string
+    type: object
+  dto.UpdatePekurbanHewanRequest:
+    properties:
+      jumlah_orang:
+        maximum: 7
+        type: integer
+    required:
+    - jumlah_orang
+    type: object
+  dto.UpdatePekurbanRequest:
+    properties:
+      alamat:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  dto.UpdatePenerimaRequest:
+    properties:
+      alamat:
+        type: string
+      name:
+        type: string
+      pekurban_id:
+        type: string
+      phone:
+        type: string
+      status:
+        enum:
+        - warga
+        - dhuafa
+        - panitia
+        - pekurban
+        type: string
+    required:
+    - status
+    type: object
+  dto.UpdatePenyembelihanRequest:
+    properties:
+      lokasi:
+        type: string
+      tanggal_penyembelihan:
+        type: string
+      urutan_aktual:
+        type: integer
+      urutan_rencana:
+        minimum: 1
+        type: integer
+    required:
+    - lokasi
+    - tanggal_penyembelihan
+    type: object
+  dto.UpdateRoleRequest:
+    properties:
+      role:
+        enum:
+        - admin
+        - panitia
+        - user
+        type: string
+    required:
+    - role
+    type: object
+  dto.UpdateUserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - name
+    - username
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: restu@example.com
+    name: Restu Adi Wahyujati
+  description: REST API untuk Sahabat Kurban
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Sahabat Kurban
+  version: "1.0"
+paths:
+  /auth/forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: Send reset password link to user email
+      parameters:
+      - description: Forgot password request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ForgotPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Forgot password
+      tags:
+      - Auth
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT tokens
+      parameters:
+      - description: Login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login user
+      tags:
+      - Auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Invalidate refresh token and logout
+      parameters:
+      - description: Logout request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Logout user
+      tags:
+      - Auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh JWT access token using refresh token
+      parameters:
+      - description: Refresh request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TokenOnlyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Refresh access token
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account
+      parameters:
+      - description: Register request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register a new user
+      tags:
+      - Auth
+  /auth/resend-verification:
+    post:
+      consumes:
+      - application/json
+      description: Resend email verification link
+      parameters:
+      - description: Resend verification request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ResendVerificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Resend verification email
+      tags:
+      - Auth
+  /auth/reset-password:
+    post:
+      consumes:
+      - application/json
+      description: Reset user password using token
+      parameters:
+      - description: Reset password request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Reset password
+      tags:
+      - Auth
+  /auth/verify-email:
+    get:
+      consumes:
+      - application/json
+      description: Verify user email using token sent by email
+      parameters:
+      - description: Verification token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Verify email
+      tags:
+      - Auth
+  /distribusi:
+    get:
+      description: Mengambil semua distribusi daging
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all distribusi daging
+      tags:
+      - DistribusiDaging
+    post:
+      consumes:
+      - application/json
+      description: Membuat distribusi daging baru
+      parameters:
+      - description: Distribusi daging request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateDistribusiRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create distribusi daging
+      tags:
+      - DistribusiDaging
+  /distribusi/{id}:
+    delete:
+      description: Menghapus distribusi daging berdasarkan ID
+      parameters:
+      - description: Distribusi ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete distribusi daging
+      tags:
+      - DistribusiDaging
+    get:
+      description: Mengambil distribusi daging berdasarkan ID
+      parameters:
+      - description: Distribusi ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get distribusi daging by ID
+      tags:
+      - DistribusiDaging
+  /distribusi/belum-terdistribusi:
+    get:
+      description: Mengambil daftar penerima daging yang belum terdistribusi
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get penerima yang belum menerima distribusi
+      tags:
+      - DistribusiDaging
+  /distribusi/total-paket:
+    get:
+      description: Mengambil total jumlah paket distribusi daging
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get total paket distribusi
+      tags:
+      - DistribusiDaging
+  /hewan-kurban:
+    get:
+      description: Ambil semua data hewan kurban
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all Hewan Kurban
+      tags:
+      - HewanKurban
+    post:
+      consumes:
+      - application/json
+      description: Tambahkan data hewan kurban baru
+      parameters:
+      - description: Hewan Kurban request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateHewanKurbanRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create Hewan Kurban
+      tags:
+      - HewanKurban
+  /hewan-kurban/{id}:
+    delete:
+      description: Hapus hewan kurban berdasarkan ID
+      parameters:
+      - description: Hewan Kurban ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete Hewan Kurban
+      tags:
+      - HewanKurban
+    get:
+      description: Ambil detail hewan kurban berdasarkan ID
+      parameters:
+      - description: Hewan Kurban ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get Hewan Kurban by ID
+      tags:
+      - HewanKurban
+    put:
+      consumes:
+      - application/json
+      description: Ubah data hewan kurban berdasarkan ID
+      parameters:
+      - description: Hewan Kurban ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateHewanKurbanRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update Hewan Kurban
+      tags:
+      - HewanKurban
+  /laporan:
+    get:
+      description: Ambil total pekurban, hewan, penerima, distribusi, dan pembayaran
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LaporanResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Mendapatkan ringkasan laporan kurban
+      tags:
+      - Laporan
+  /patungan:
+    get:
+      description: Ambil semua data patungan (admin/panitia), atau hanya milik user
+        sendiri
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all patungan
+      tags:
+      - Patungan
+    post:
+      consumes:
+      - application/json
+      description: User menambahkan dirinya ke dalam patungan hewan kurban
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePekurbanHewanRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create new patungan hewan
+      tags:
+      - Patungan
+  /patungan/{pekurban_id}/{hewan_id}:
+    delete:
+      description: Hapus relasi patungan pekurban dengan hewan
+      parameters:
+      - description: Pekurban ID
+        in: path
+        name: pekurban_id
+        required: true
+        type: string
+      - description: Hewan ID
+        in: path
+        name: hewan_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete patungan
+      tags:
+      - Patungan
+    put:
+      consumes:
+      - application/json
+      description: Update porsi kontribusi user dalam patungan
+      parameters:
+      - description: Pekurban ID
+        in: path
+        name: pekurban_id
+        required: true
+        type: string
+      - description: Hewan ID
+        in: path
+        name: hewan_id
+        required: true
+        type: string
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatePekurbanHewanRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update patungan
+      tags:
+      - Patungan
+  /patungan/hewan/{hewan_id}:
+    get:
+      description: Ambil semua pekurban berdasarkan ID hewan
+      parameters:
+      - description: Hewan ID
+        in: path
+        name: hewan_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get patungan by hewan_id
+      tags:
+      - Patungan
+  /patungan/pekurban/{pekurban_id}:
+    get:
+      description: Ambil semua data patungan berdasarkan ID pekurban
+      parameters:
+      - description: Pekurban ID
+        in: path
+        name: pekurban_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get patungan by pekurban_id
+      tags:
+      - Patungan
+  /pekurban:
+    get:
+      description: Ambil semua data pekurban (khusus admin & panitia)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all Pekurban
+      tags:
+      - Pekurban
+    post:
+      consumes:
+      - application/json
+      description: Daftarkan user atau panitia sebagai pekurban
+      parameters:
+      - description: Pekurban request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePekurbanRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create Pekurban
+      tags:
+      - Pekurban
+  /pekurban/{id}:
+    delete:
+      description: Hapus data pekurban berdasarkan ID (khusus admin)
+      parameters:
+      - description: Pekurban ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete Pekurban
+      tags:
+      - Pekurban
+    get:
+      description: Ambil detail pekurban berdasarkan ID (khusus admin & panitia)
+      parameters:
+      - description: Pekurban ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get Pekurban by ID
+      tags:
+      - Pekurban
+    put:
+      consumes:
+      - application/json
+      description: Ubah data pekurban berdasarkan ID (role-based access)
+      parameters:
+      - description: Pekurban ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatePekurbanRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update Pekurban
+      tags:
+      - Pekurban
+  /pekurban/me:
+    get:
+      description: Ambil data pekurban milik user yang sedang login
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get My Pekurban Data
+      tags:
+      - Pekurban
+  /pembayaran:
+    get:
+      description: Mengambil semua pembayaran (admin, panitia)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all pembayaran
+      tags:
+      - Pembayaran
+    post:
+      consumes:
+      - application/json
+      description: Membuat pembayaran baru
+      parameters:
+      - description: Create Payment Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePaymentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create pembayaran
+      tags:
+      - Pembayaran
+  /pembayaran/{id}:
+    get:
+      description: Ambil detail pembayaran berdasarkan ID
+      parameters:
+      - description: Payment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get pembayaran by ID
+      tags:
+      - Pembayaran
+  /pembayaran/order/{order_id}:
+    get:
+      description: Ambil detail pembayaran berdasarkan Order ID
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get pembayaran by Order ID
+      tags:
+      - Pembayaran
+  /pembayaran/rekap/hewan:
+    get:
+      description: Ambil rekapitulasi dana pembayaran untuk setiap hewan
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get rekap dana per hewan
+      tags:
+      - Pembayaran
+  /pembayaran/rekap/pekurban:
+    get:
+      description: Ambil progress pembayaran kurban per pekurban
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get progress pembayaran per pekurban
+      tags:
+      - Pembayaran
+  /penerima:
+    get:
+      description: Mengambil semua data penerima daging
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all penerima daging
+      tags:
+      - Penerima Daging
+    post:
+      consumes:
+      - application/json
+      description: Membuat data penerima daging baru
+      parameters:
+      - description: Create Penerima Daging Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePenerimaRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create penerima daging
+      tags:
+      - Penerima Daging
+  /penerima/{id}:
+    delete:
+      description: Menghapus data penerima daging berdasarkan ID
+      parameters:
+      - description: Penerima Daging ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete penerima daging
+      tags:
+      - Penerima Daging
+    get:
+      description: Mengambil detail penerima daging berdasarkan ID
+      parameters:
+      - description: Penerima Daging ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get penerima daging by ID
+      tags:
+      - Penerima Daging
+    put:
+      consumes:
+      - application/json
+      description: Mengupdate data penerima daging berdasarkan ID
+      parameters:
+      - description: Penerima Daging ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Penerima Daging Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatePenerimaRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update penerima daging
+      tags:
+      - Penerima Daging
+  /penyembelihan:
+    get:
+      description: Mengambil semua data penyembelihan
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all penyembelihan
+      tags:
+      - Penyembelihan
+    post:
+      consumes:
+      - application/json
+      description: Membuat data penyembelihan baru
+      parameters:
+      - description: Create Penyembelihan Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePenyembelihanRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create penyembelihan
+      tags:
+      - Penyembelihan
+  /penyembelihan/{id}:
+    delete:
+      description: Menghapus data penyembelihan berdasarkan ID
+      parameters:
+      - description: Penyembelihan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete penyembelihan
+      tags:
+      - Penyembelihan
+    get:
+      description: Mengambil detail penyembelihan berdasarkan ID
+      parameters:
+      - description: Penyembelihan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get penyembelihan by ID
+      tags:
+      - Penyembelihan
+    put:
+      consumes:
+      - application/json
+      description: Mengupdate data penyembelihan berdasarkan ID
+      parameters:
+      - description: Penyembelihan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Penyembelihan Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatePenyembelihanRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update penyembelihan
+      tags:
+      - Penyembelihan
+  /users:
+    get:
+      description: Mengambil semua data user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all users
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      description: Menghapus user berdasarkan ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete user
+      tags:
+      - Users
+    get:
+      description: Mengambil data user berdasarkan ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get user by ID
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Mengupdate data user berdasarkan ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update User Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update user
+      tags:
+      - Users
+  /users/{id}/password:
+    put:
+      consumes:
+      - application/json
+      description: Mengubah password user berdasarkan ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Change Password Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Change user password
+      tags:
+      - Users
+  /users/{id}/role:
+    patch:
+      consumes:
+      - application/json
+      description: Mengupdate role user berdasarkan ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Role Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update user role
+      tags:
+      - Users
+  /users/me:
+    get:
+      description: Mengambil data profil user yang sedang login
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get my profile
+      tags:
+      - Users
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Membuat user baru dengan role admin
+      parameters:
+      - description: Register Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create admin
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" + a space + your JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

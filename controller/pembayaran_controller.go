@@ -17,6 +17,21 @@ func NewPembayaranController(s service.PembayaranKurbanService, p service.Pekurb
 	return &PembayaranController{service: s, pekurbanServ: p}
 }
 
+// Create godoc
+// @Summary Create pembayaran
+// @Description Membuat pembayaran baru
+// @Tags Pembayaran
+// @Accept json
+// @Produce json
+// @Param request body dto.CreatePaymentRequest true "Create Payment Request"
+// @Success 201 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 403 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /pembayaran [post]
+// @Security BearerAuth
 func (c *PembayaranController) Create(ctx *gin.Context) {
 	var req dto.CreatePaymentRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -81,6 +96,16 @@ func (c *PembayaranController) Create(ctx *gin.Context) {
 	})
 }
 
+// GetAll godoc
+// @Summary Get all pembayaran
+// @Description Mengambil semua pembayaran (admin, panitia)
+// @Tags Pembayaran
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /pembayaran [get]
+// @Security BearerAuth
 func (c *PembayaranController) GetAll(ctx *gin.Context) {
 	res, err := c.service.GetAll(ctx.Request.Context())
 	if err != nil {
@@ -96,6 +121,18 @@ func (c *PembayaranController) GetAll(ctx *gin.Context) {
 	})
 }
 
+// GetByID godoc
+// @Summary Get pembayaran by ID
+// @Description Ambil detail pembayaran berdasarkan ID
+// @Tags Pembayaran
+// @Produce json
+// @Param id path string true "Payment ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /pembayaran/{id} [get]
+// @Security BearerAuth
 func (c *PembayaranController) GetByID(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -126,6 +163,18 @@ func (c *PembayaranController) GetByID(ctx *gin.Context) {
 	})
 }
 
+// GetByOrderID godoc
+// @Summary Get pembayaran by Order ID
+// @Description Ambil detail pembayaran berdasarkan Order ID
+// @Tags Pembayaran
+// @Produce json
+// @Param order_id path string true "Order ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /pembayaran/order/{order_id} [get]
+// @Security BearerAuth
 func (c *PembayaranController) GetByOrderID(ctx *gin.Context) {
 	orderID := ctx.Param("order_id")
 	if orderID == "" {
@@ -155,6 +204,15 @@ func (c *PembayaranController) GetByOrderID(ctx *gin.Context) {
 	})
 }
 
+// GetRekapDanaPerHewan godoc
+// @Summary Get rekap dana per hewan
+// @Description Ambil rekapitulasi dana pembayaran untuk setiap hewan
+// @Tags Pembayaran
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /pembayaran/rekap/hewan [get]
+// @Security BearerAuth
 func (c *PembayaranController) GetRekapDanaPerHewan(ctx *gin.Context) {
 	res, err := c.service.GetRekapDanaPerHewan(ctx.Request.Context())
 	if err != nil {
@@ -170,6 +228,15 @@ func (c *PembayaranController) GetRekapDanaPerHewan(ctx *gin.Context) {
 	})
 }
 
+// GetProgressPembayaran godoc
+// @Summary Get progress pembayaran per pekurban
+// @Description Ambil progress pembayaran kurban per pekurban
+// @Tags Pembayaran
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /pembayaran/rekap/pekurban [get]
+// @Security BearerAuth
 func (c *PembayaranController) GetProgressPembayaran(ctx *gin.Context) {
 	res, err := c.service.GetProgressPembayaran(ctx.Request.Context())
 	if err != nil {

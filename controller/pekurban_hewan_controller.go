@@ -17,6 +17,19 @@ func NewPekurbanHewanController(s service.PekurbanHewanService, serv service.Pek
 	return &PekurbanHewanController{service: s, serv: serv}
 }
 
+// @Summary Create new patungan hewan
+// @Description User menambahkan dirinya ke dalam patungan hewan kurban
+// @Tags Patungan
+// @Accept json
+// @Produce json
+// @Param request body dto.CreatePekurbanHewanRequest true "Request Body"
+// @Success 201 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 403 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /patungan [post]
+// @Security BearerAuth
 func (c *PekurbanHewanController) Create(ctx *gin.Context) {
 	userRaw, exists := ctx.Get("user")
 	if !exists {
@@ -67,6 +80,17 @@ func (c *PekurbanHewanController) Create(ctx *gin.Context) {
 	})
 }
 
+// GetAll godoc
+// @Summary Get all patungan
+// @Description Ambil semua data patungan (admin/panitia), atau hanya milik user sendiri
+// @Tags Patungan
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 403 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /patungan [get]
+// @Security BearerAuth
 func (c *PekurbanHewanController) GetAll(ctx *gin.Context) {
 	userRaw, exists := ctx.Get("user")
 	if !exists {
@@ -124,7 +148,17 @@ func (c *PekurbanHewanController) GetAll(ctx *gin.Context) {
 	})
 }
 
-
+// GetByHewanID godoc
+// @Summary Get patungan by hewan_id
+// @Description Ambil semua pekurban berdasarkan ID hewan
+// @Tags Patungan
+// @Produce json
+// @Param hewan_id path string true "Hewan ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /patungan/hewan/{hewan_id} [get]
+// @Security BearerAuth
 func (c *PekurbanHewanController) GetByHewanID(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("hewan_id"))
 	if err != nil {
@@ -149,6 +183,17 @@ func (c *PekurbanHewanController) GetByHewanID(ctx *gin.Context) {
 	})
 }
 
+// GetByPekurbanID godoc
+// @Summary Get patungan by pekurban_id
+// @Description Ambil semua data patungan berdasarkan ID pekurban
+// @Tags Patungan
+// @Produce json
+// @Param pekurban_id path string true "Pekurban ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /patungan/pekurban/{pekurban_id} [get]
+// @Security BearerAuth
 func (c *PekurbanHewanController) GetByPekurbanID(ctx *gin.Context) {
 	id, err := uuid.Parse(ctx.Param("pekurban_id"))
 	if err != nil {
@@ -173,6 +218,21 @@ func (c *PekurbanHewanController) GetByPekurbanID(ctx *gin.Context) {
 	})
 }
 
+// Update godoc
+// @Summary Update patungan
+// @Description Update porsi kontribusi user dalam patungan
+// @Tags Patungan
+// @Accept json
+// @Produce json
+// @Param pekurban_id path string true "Pekurban ID"
+// @Param hewan_id path string true "Hewan ID"
+// @Param request body dto.UpdatePekurbanHewanRequest true "Request Body"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /patungan/{pekurban_id}/{hewan_id} [put]
+// @Security BearerAuth
 func (c *PekurbanHewanController) Update(ctx *gin.Context) {
 	var req dto.UpdatePekurbanHewanRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -215,6 +275,19 @@ func (c *PekurbanHewanController) Update(ctx *gin.Context) {
 	})
 }
 
+// Delete godoc
+// @Summary Delete patungan
+// @Description Hapus relasi patungan pekurban dengan hewan
+// @Tags Patungan
+// @Produce json
+// @Param pekurban_id path string true "Pekurban ID"
+// @Param hewan_id path string true "Hewan ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /patungan/{pekurban_id}/{hewan_id} [delete]
+// @Security BearerAuth
 func (c *PekurbanHewanController) Delete(ctx *gin.Context) {
 	pekurbanID, err := uuid.Parse(ctx.Param("pekurban_id"))
 	if err != nil {

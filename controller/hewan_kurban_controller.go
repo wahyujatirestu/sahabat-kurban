@@ -15,6 +15,18 @@ func NewHewanKurbanController(service service.HewanKurbanService) *HewanKurbanCo
 	return &HewanKurbanController{service: service}
 }
 
+// Create godoc
+// @Summary Create Hewan Kurban
+// @Description Tambahkan data hewan kurban baru
+// @Tags HewanKurban
+// @Accept json
+// @Produce json
+// @Param request body dto.CreateHewanKurbanRequest true "Hewan Kurban request"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /hewan-kurban [post]
 func (c *HewanKurbanController) Create(ctx *gin.Context) {
 	var req dto.CreateHewanKurbanRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -39,6 +51,15 @@ func (c *HewanKurbanController) Create(ctx *gin.Context) {
 	})
 }
 
+// GetAll godoc
+// @Summary Get all Hewan Kurban
+// @Description Ambil semua data hewan kurban
+// @Tags HewanKurban
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /hewan-kurban [get]
 func (c *HewanKurbanController) GetAll(ctx *gin.Context) {
 	list, err := c.service.GetAll(ctx.Request.Context())
 	if err != nil {
@@ -54,7 +75,17 @@ func (c *HewanKurbanController) GetAll(ctx *gin.Context) {
 	})
 }
 
-
+// GetByID godoc
+// @Summary Get Hewan Kurban by ID
+// @Description Ambil detail hewan kurban berdasarkan ID
+// @Tags HewanKurban
+// @Produce json
+// @Param id path string true "Hewan Kurban ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /hewan-kurban/{id} [get]
 func (c *HewanKurbanController) GetByID(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -80,6 +111,19 @@ func (c *HewanKurbanController) GetByID(ctx *gin.Context) {
 	})
 }
 
+// Update godoc
+// @Summary Update Hewan Kurban
+// @Description Ubah data hewan kurban berdasarkan ID
+// @Tags HewanKurban
+// @Accept json
+// @Produce json
+// @Param id path string true "Hewan Kurban ID"
+// @Param request body dto.UpdateHewanKurbanRequest true "Update request"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /hewan-kurban/{id} [put]
 func (c *HewanKurbanController) Update(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)
@@ -113,6 +157,18 @@ func (c *HewanKurbanController) Update(ctx *gin.Context) {
 	})
 }
 
+
+// Delete godoc
+// @Summary Delete Hewan Kurban
+// @Description Hapus hewan kurban berdasarkan ID
+// @Tags HewanKurban
+// @Produce json
+// @Param id path string true "Hewan Kurban ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Security BearerAuth
+// @Router /hewan-kurban/{id} [delete]
 func (c *HewanKurbanController) Delete(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := uuid.Parse(idStr)

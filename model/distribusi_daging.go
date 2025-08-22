@@ -9,7 +9,7 @@ import (
 type DistribusiDaging struct {
 	ID                	uuid.UUID		`db:"id"`
 	PenerimaID        	uuid.UUID		`db:"penerima_id"`
-	HewanID           	uuid.UUID		`db:"hewan_id"`
+	PenerimaName      	string			
 	JumlahPaket       	int				`db:"jumlah_paket"`
 	TanggalDistribusi 	time.Time		`db:"tanggal_distribusi"`
 	Created_At         	time.Time		`db:"created_at"`

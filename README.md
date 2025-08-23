@@ -317,3 +317,12 @@ Aplikasi berjalan di `http://localhost:8080` (sesuai `API_PORT`).
 ## Kontribusi
 
 PR & issue dipersilakan. Ikuti gaya kode yang ada, sertakan deskripsi perubahan yang jelas, dan tambahkan test/manual step di `api.rest` bila relevan.
+
+## Lisensi
+
+**MIT License**
+© 2025 Restu Adi Wahyujati
+
+---
+
+> Dibuat dengan semangat & secangkir susu jahe oleh [Restu Adi Wahyujati](https://github.com/wahyujatirestu)

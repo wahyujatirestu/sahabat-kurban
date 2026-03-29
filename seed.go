@@ -15,7 +15,11 @@ func seedInitialAdmin(userRepo repository.UserRepository) {
 	ctx := context.Background()
 	adminEmail := "admin@sahabatkurban.com"
 
-	existing, _ := userRepo.FindByEmailOrUsername(ctx, adminEmail)
+	existing, err := userRepo.FindByEmailOrUsername(ctx, adminEmail)
+	if err != nil {
+		log.Fatalf("Error checking admin: %v", err)
+	}
+
 	if existing != nil {
 		log.Println("Admin already exists. Skipping seed.")
 		return

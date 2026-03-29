@@ -67,15 +67,33 @@ func (r *userRepository) FindByEmail(ctx context.Context, email string) (*model.
 }
 
 func (r *userRepository) FindByEmailOrUsername(ctx context.Context, identifier string) (*model.User, error) {
-	row := r.db.QueryRowContext(ctx, `SELECT id, username, name, email, password, role, is_verified, created_at, updated_at FROM users WHERE email=$1 OR username=$1`, identifier)
+	row := r.db.QueryRowContext(ctx, `
+		SELECT id, username, name, email, password, role, is_verified, created_at, updated_at
+		FROM users
+		WHERE email=$1 OR username=$1
+	`, identifier)
 
 	var u model.User
-	err := row.Scan(&u.ID, &u.Username, &u.Name, &u.Email, &u.Password, &u.Role, &u.IsVerified, &u.Created_At, &u.Updated_At)
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
+	err := row.Scan(
+		&u.ID,
+		&u.Username,
+		&u.Name,
+		&u.Email,
+		&u.Password,
+		&u.Role,
+		&u.IsVerified,
+		&u.Created_At,
+		&u.Updated_At,
+	)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil 
+		}
+		return nil, err 
 	}
 
-	return &u, err
+	return &u, nil 
 }
 
 func (r *userRepository) FindById(ctx context.Context, id uuid.UUID) (*model.User, error) {

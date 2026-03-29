@@ -46,7 +46,7 @@ Content-Type: application/json
 
 {
     "identifier": "superadmin",
-    "password": "admin123"
+    "password": "superadmin123"
 }
 
 ### Refresh Token
